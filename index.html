@@ -1,0 +1,1525 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Apple Med Trading L.L.C - medical, dental and veterinary supplies across the UAE and Oman.">
+<link rel="icon" href="img/logo.png">
+<title>Applemed Future Concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: glass nav with division switch → split hero (configurator | live 3D viewer) → 3D-rendered catalogue with brand filter → coverage map → order flow + tracker → careers → contact. Each division re-themes the page. */
+:root{
+  --bg:#edf2f7; --surface:#ffffff; --ink:#0b1a2c; --muted:#56677c; --line:#d5dee9;
+  --acc:#1d5fd8; --acc2:#16a39b; --acc-soft:rgba(29,95,216,.10); --glow:rgba(29,95,216,.28);
+  --ok:#12a150; --mark:#ffd23f;
+  --f-display:"Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+  --f-body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --ease:cubic-bezier(.2,.8,.2,1);
+  color-scheme:light;
+}
+body[data-div="dental"]{--bg:#eef8f6; --line:#cfe5e1; --acc:#0d9488; --acc2:#3ba7e8; --acc-soft:rgba(13,148,136,.10); --glow:rgba(13,148,136,.28)}
+body[data-div="vet"]{--bg:#fff4e8; --line:#f0dac4; --acc:#ee5a24; --acc2:#7b4dff; --acc-soft:rgba(238,90,36,.10); --glow:rgba(238,90,36,.30)}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+main{overflow-x:clip}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;overflow-x:hidden;transition:background-color .6s var(--ease);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--bg)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc)}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0}
+h2{font-size:clamp(28px,5vw,46px);font-weight:700;line-height:1.05;letter-spacing:-.02em}
+.lead{color:var(--muted);max-width:56ch;margin:10px 0 0}
+section{padding-block:72px;position:relative}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+.progress{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;height:3px;z-index:70;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,var(--acc),var(--acc2))}
+
+/* NAV */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:color-mix(in srgb,var(--bg) 80%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--line);transition:background-color .6s}
+.nav-in{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-block:10px}
+.logo{display:flex;align-items:center;gap:9px;color:var(--ink);text-decoration:none;line-height:1.05}
+.logo img{width:36px;height:36px}
+.logo b{font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:-.02em;display:block}
+.logo small{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.divs{position:relative;display:flex;background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:4px;margin-left:auto}
+.divs button{position:relative;z-index:1;border:0;background:none;padding:8px 14px;border-radius:99px;font-weight:600;font-size:14px;cursor:pointer;color:var(--muted);transition:color .3s}
+.divs button[aria-selected="true"]{color:#fff}
+.divs .pill{position:absolute;top:4px;bottom:4px;left:4px;border-radius:99px;background:linear-gradient(120deg,var(--acc),var(--acc2));box-shadow:0 6px 18px -6px var(--glow);transition:transform .5s var(--ease),width .5s var(--ease)}
+.nav-act{display:flex;gap:8px}
+.search,.qbtn{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:9px 12px;cursor:pointer;font-size:14px;color:var(--muted)}
+.search kbd{font-family:var(--f-mono);font-size:11px;border:1px solid var(--line);border-radius:6px;padding:1px 5px}
+.qbtn{color:var(--ink);font-weight:600}
+.qbtn b{min-width:22px;height:22px;border-radius:99px;display:grid;place-items:center;background:var(--acc);color:#fff;font-size:12px;font-variant-numeric:tabular-nums;padding:0 6px}
+.qbtn.bump b{animation:bump .5s var(--ease)}
+@keyframes bump{40%{transform:scale(1.5)}}
+@media (max-width:820px){
+  .divs{order:3;width:100%;margin-left:0}
+  .divs button{flex:1;padding:8px 6px}
+  .nav-act{margin-left:auto}
+  .search span,.search kbd{display:none}
+  .logo small{display:none}
+}
+
+.banner{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:18px;padding:10px 14px;border:1px dashed var(--line);border-radius:14px;font-size:14px;color:var(--muted);background:color-mix(in srgb,var(--surface) 60%,transparent)}
+.banner button{border:0;background:var(--ink);color:var(--surface);border-radius:99px;padding:6px 12px;font-weight:600;font-size:13px;cursor:pointer}
+
+/* HERO */
+.hero{display:grid;grid-template-columns:1fr 1.05fr;gap:40px;align-items:start;padding-block:40px 56px}
+.hero-copy{min-width:0}
+.hero h1{font-size:clamp(36px,5.4vw,64px);font-weight:800;line-height:1;letter-spacing:-.035em;margin:12px 0 14px}
+.hero h1 .hl{background:linear-gradient(100deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.sub{font-size:17px;color:var(--muted);max-width:46ch;margin:0 0 22px}
+.swap-in{animation:swapIn .7s var(--ease) both}
+@keyframes swapIn{from{transform:translateY(24px) rotateX(-30deg);filter:blur(6px);opacity:0}}
+
+.config{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:18px;display:grid;gap:14px;box-shadow:0 20px 50px -34px var(--glow)}
+.cfg-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.cfg-top > div{min-width:0}
+.cfg-brand{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--acc)}
+.cfg-name{font-family:var(--f-display);font-size:24px;font-weight:700;letter-spacing:-.02em;line-height:1.1}
+.code{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:12px;padding:6px 10px;border-radius:10px;background:var(--bg);border:1px solid var(--line);white-space:nowrap}
+.code i{font-style:normal;color:var(--muted)}
+.sample{font-size:11px;font-weight:700;padding:3px 8px;border-radius:99px;background:var(--mark);color:var(--ink)}
+.opt{display:grid;gap:8px}
+.opt > span{font-size:12px;font-weight:700;color:var(--muted)}
+.opt > span b{color:var(--ink);font-weight:700}
+.vals{display:flex;gap:8px;flex-wrap:wrap}
+.sw{width:32px;height:32px;border-radius:50%;border:2px solid var(--surface);box-shadow:0 0 0 1px var(--line);cursor:pointer;transition:transform .25s var(--ease),box-shadow .25s}
+.sw:hover{transform:scale(1.12)}
+.sw[aria-pressed="true"]{box-shadow:0 0 0 2px var(--acc);transform:scale(1.08)}
+.chip{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:8px 12px;font-size:13px;font-weight:600;cursor:pointer;transition:all .25s var(--ease)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.cta{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:0;border-radius:14px;padding:13px 18px;font-weight:700;cursor:pointer;transition:transform .25s var(--ease),box-shadow .25s;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:15px}
+.btn.primary{background:linear-gradient(120deg,var(--acc),var(--acc2));color:#fff;box-shadow:0 10px 30px -10px var(--glow)}
+.btn.primary:hover{transform:translateY(-2px);box-shadow:0 16px 36px -10px var(--glow)}
+.btn.ghost{background:var(--surface);border:1px solid var(--line);color:var(--ink)}
+.btn.ghost:hover{transform:translateY(-2px)}
+.btn.wa{background:#1fae5b;color:#fff}
+
+.viewer-wrap{min-width:0}
+.viewer{position:relative;aspect-ratio:1/1;max-width:100%;border-radius:32px;overflow:hidden;background:radial-gradient(70% 60% at 50% 40%,var(--surface),color-mix(in srgb,var(--acc) 14%,var(--bg)));border:1px solid var(--line);cursor:grab;touch-action:pan-y;transition:background .6s}
+.viewer.drag{cursor:grabbing}
+.viewer canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.viewer::after{content:"";position:absolute;left:25%;right:25%;bottom:11%;height:7%;border-radius:50%;background:radial-gradient(closest-side,rgba(11,26,44,.22),transparent);pointer-events:none}
+.grid-floor{position:absolute;inset:auto 0 0;height:45%;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:34px 34px;transform:perspective(400px) rotateX(62deg);transform-origin:50% 100%;opacity:.55;-webkit-mask-image:linear-gradient(transparent,#000 70%);mask-image:linear-gradient(transparent,#000 70%);pointer-events:none}
+.hot{position:absolute;display:flex;flex-direction:column;padding:8px 12px;border-radius:12px;background:color-mix(in srgb,var(--surface) 82%,transparent);backdrop-filter:blur(8px);border:1px solid var(--line);font-size:12px;box-shadow:0 8px 24px -14px rgba(11,26,44,.4);pointer-events:none;transition:transform .6s var(--ease),opacity .4s;max-width:42%}
+.hot b{font-size:14px;font-variant-numeric:tabular-nums}
+.hot span{color:var(--muted);font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.hot::before{content:"";position:absolute;width:8px;height:8px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 5px var(--acc-soft)}
+.h1{top:12%;left:6%}.h1::before{right:-16px;top:50%}
+.h2{top:42%;right:5%}.h2::before{left:-16px;top:50%}
+.h3{bottom:18%;left:6%}.h3::before{right:-16px;top:40%}
+.hot.out{opacity:0;transform:translateY(10px) scale(.9)}
+.vtag{position:absolute;top:14px;right:14px;font-family:var(--f-mono);font-size:11px;padding:5px 9px;border-radius:99px;background:var(--ink);color:var(--surface);letter-spacing:.06em}
+.vname{position:absolute;left:18px;bottom:16px;right:18px;display:flex;justify-content:space-between;align-items:end;gap:10px;pointer-events:none}
+.vname strong{font-family:var(--f-display);font-size:20px;letter-spacing:-.02em;line-height:1.1}
+.vname small{font-family:var(--f-mono);color:var(--muted);font-size:11px;text-align:right}
+.pchips{display:flex;gap:8px;margin-top:12px;overflow-x:auto;padding:4px 2px 6px;scrollbar-width:thin}
+.pchips button{flex:0 0 auto;width:62px;height:62px;border-radius:16px;border:1px solid var(--line);background:var(--surface);padding:4px;cursor:pointer;transition:transform .3s var(--ease),border-color .3s}
+.pchips button img{width:100%;height:100%;object-fit:contain}
+.pchips button[aria-pressed="true"]{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-soft);transform:translateY(-3px)}
+@media (max-width:900px){.hero{grid-template-columns:1fr;gap:24px}.viewer-wrap{order:-1}.viewer{aspect-ratio:1/0.85}}
+
+.rv{transition:transform 1s var(--ease)}
+.rv.pre{transform:perspective(1200px) translateY(60px) rotateX(14deg)}
+
+/* CATALOGUE */
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;margin-bottom:22px}
+.sec-head > div{min-width:0}
+.filter{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 14px;min-width:min(100%,260px)}
+.filter input{border:0;outline:0;background:none;font:inherit;width:100%;color:var(--ink)}
+.brands{position:relative;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.brands button{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:7px 14px;font-weight:700;font-size:13px;cursor:pointer;transition:all .25s}
+.brands button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.brands button small{font-weight:600;opacity:.6;margin-left:4px}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:16px}
+.pcard{--rx:0deg;--ry:0deg;--mx:50%;--my:30%;position:relative;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:12px;transform:perspective(900px) rotateX(var(--rx)) rotateY(var(--ry));transition:transform .5s var(--ease),box-shadow .4s;min-width:0}
+.pcard.live{transition:transform .08s linear}
+.pcard:hover{box-shadow:0 24px 50px -28px var(--glow)}
+.thumb{position:relative;display:block;width:100%;aspect-ratio:4/3;border:0;border-radius:16px;cursor:pointer;overflow:hidden;background:radial-gradient(240px circle at var(--mx) var(--my),color-mix(in srgb,var(--c) 30%,var(--surface)),color-mix(in srgb,var(--acc) 8%,var(--bg)))}
+.thumb img{position:absolute;inset:6%;width:88%;height:88%;object-fit:contain;transition:transform .6s var(--ease)}
+.pcard:hover .thumb img{transform:scale(1.08) rotate(-4deg)}
+.thumb .qv{position:absolute;left:10px;bottom:10px;font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:var(--ink);color:var(--surface);padding:5px 8px;border-radius:8px;transform:translateY(40px);transition:transform .35s var(--ease)}
+.pcard:hover .qv,.thumb:focus-visible .qv{transform:none}
+.thumb .sample{position:absolute;top:10px;left:10px}
+.pinfo{padding:12px 4px 2px;display:grid;gap:2px}
+.pbrand{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--acc)}
+.pinfo h3{font-size:18px;font-weight:700;letter-spacing:-.01em;line-height:1.15}
+.pinfo p{margin:0;font-size:14px;color:var(--muted)}
+.swrow{display:flex;gap:6px;flex-wrap:wrap;padding:8px 4px 0}
+.swrow .sw{width:22px;height:22px;border-width:2px}
+.swrow .chip{padding:4px 8px;font-size:12px;border-radius:8px}
+.prow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 4px 2px;margin-top:auto}
+.prow .mono{font-size:12px;color:var(--muted)}
+.pbtns{display:flex;gap:6px;flex:0 0 auto}
+.add,.mini{white-space:nowrap}
+.add,.mini{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:8px 11px;font-weight:700;font-size:13px;cursor:pointer;transition:background .2s,color .2s}
+.add:hover{background:var(--acc);color:#fff;border-color:var(--acc)}
+.mini:hover{border-color:var(--acc)}
+.empty{grid-column:1/-1;padding:30px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:20px}
+
+/* COVERAGE */
+.cov{display:grid;grid-template-columns:1.3fr 1fr;gap:24px;align-items:stretch}
+.map{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:12px;min-width:0}
+.map svg{width:100%;height:auto;display:block}
+.map .land{fill:color-mix(in srgb,var(--acc) 7%,var(--bg));stroke:var(--line);stroke-width:1.5}
+.route{fill:none;stroke:var(--acc);stroke-width:1.6;stroke-dasharray:4 5;opacity:.5;animation:dash 1.4s linear infinite}
+.route.on{opacity:1;stroke-width:2.6}
+@keyframes dash{to{stroke-dashoffset:-18}}
+.node{cursor:pointer}
+.node circle.dot{fill:var(--surface);stroke:var(--acc);stroke-width:2.5}
+.node.on circle.dot{fill:var(--acc)}
+.node circle.ping{fill:var(--acc);opacity:0}
+.node.on circle.ping{animation:ping 1.6s infinite}
+@keyframes ping{0%{opacity:.4;r:6}100%{opacity:0;r:22}}
+.node text{font-family:var(--f-body);font-size:11px;font-weight:600;fill:var(--ink)}
+.cov-card{background:var(--ink);color:#fff;border-radius:28px;padding:26px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.cov-card .eyebrow{color:color-mix(in srgb,var(--acc2) 70%,#fff)}
+.cov-card h3{font-size:34px;letter-spacing:-.02em}
+.cov-card dl{display:grid;grid-template-columns:auto 1fr;gap:10px 18px;margin:0;font-size:15px}
+.cov-card dt{color:rgba(255,255,255,.6)}
+.cov-card dd{margin:0;font-weight:600}
+.cov-card .note{margin-top:auto;font-size:12px;color:rgba(255,255,255,.5)}
+@media (max-width:860px){.cov{grid-template-columns:1fr}}
+
+/* FLOW + TRACKER */
+.flow{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:4px;counter-reset:s}
+.steps li{display:grid;grid-template-columns:44px 1fr;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.steps li::before{counter-increment:s;content:counter(s,decimal-leading-zero);font-family:var(--f-mono);font-size:13px;color:var(--acc);padding-top:3px}
+.steps b{display:block;font-size:17px}
+.steps span{color:var(--muted);font-size:14px}
+.track{background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:22px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.track-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
+.track-top strong{font-family:var(--f-mono);font-size:14px}
+.status{font-size:12px;font-weight:700;padding:5px 10px;border-radius:99px;background:var(--acc-soft);color:var(--acc)}
+.rail{position:relative;height:8px;border-radius:99px;background:var(--bg)}
+.rail i{position:absolute;inset:0 auto 0 0;border-radius:99px;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .9s var(--ease)}
+.rail em{position:absolute;top:50%;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:var(--surface);border:3px solid var(--acc);transition:left .9s var(--ease)}
+.tl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;font-size:13px}
+.tl li{color:var(--muted);transition:color .4s}
+.tl li b{display:block;font-family:var(--f-mono);font-size:11px;font-variant-numeric:tabular-nums}
+.tl li.done{color:var(--ink)}
+@media (max-width:860px){.flow{grid-template-columns:1fr}}
+@media (max-width:440px){.tl{grid-template-columns:repeat(2,1fr)}}
+
+/* CAREERS */
+.jobs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.job{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:22px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.job h3{font-size:20px}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tags span{font-size:12px;padding:4px 9px;border-radius:99px;background:var(--bg);color:var(--muted)}
+.job form{display:grid;gap:8px;margin-top:6px}
+.job input{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);min-width:0;width:100%}
+.job .done{font-size:14px;color:var(--ok);font-weight:600}
+
+/* CONTACT */
+.contact{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px}
+.contact > div{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px;display:grid;gap:4px;min-width:0}
+.contact span{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.contact b{font-size:17px;user-select:all;overflow-wrap:anywhere}
+.contact a{color:var(--acc);font-weight:700;font-size:14px}
+footer{padding-block:40px 120px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+
+/* FLOATING */
+.fab{position:fixed;z-index:55;border:0;cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:700;border-radius:99px;padding:13px 18px;box-shadow:0 14px 34px -12px rgba(11,26,44,.45)}
+.fab.ai{right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));background:linear-gradient(120deg,var(--acc),var(--acc2));color:#fff}
+.fab.ai i{width:9px;height:9px;border-radius:50%;background:#fff;animation:blink 1.8s infinite}
+@keyframes blink{50%{opacity:.25}}
+.fab.guide{left:calc(16px + env(safe-area-inset-left,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--surface)}
+
+.fb{display:none;position:absolute;z-index:6;top:-10px;left:-10px;width:26px;height:26px;border-radius:50%;background:var(--mark);color:#0b1a2c;font:700 12px var(--f-mono);place-items:center;border:2px solid #0b1a2c;cursor:pointer;box-shadow:0 4px 12px -4px rgba(0,0,0,.4)}
+body.guide .fb{display:grid}
+.viewer .fb{top:12px;left:12px}
+.hot .fb{left:auto;right:-12px;top:-12px}
+.flash{animation:flash 1.2s var(--ease)}
+@keyframes flash{30%{box-shadow:0 0 0 6px var(--mark)}}
+
+.panel{position:fixed;z-index:80;background:var(--surface);border:1px solid var(--line);box-shadow:0 30px 80px -30px rgba(11,26,44,.55);display:flex;flex-direction:column}
+.guide-p{left:calc(16px + env(safe-area-inset-left,0px));bottom:calc(76px + env(safe-area-inset-bottom,0px));width:min(360px,calc(100vw - 32px));max-height:min(70vh,580px);border-radius:22px;overflow:hidden}
+.p-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.p-head strong{font-family:var(--f-display);font-size:18px}
+.x{border:0;background:var(--bg);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;flex:0 0 auto}
+.guide-p ol{list-style:none;margin:0;padding:8px;overflow-y:auto}
+.guide-p li button{display:grid;grid-template-columns:28px 1fr;gap:10px;width:100%;text-align:left;border:0;background:none;padding:10px;border-radius:12px;cursor:pointer}
+.guide-p li button:hover{background:var(--bg)}
+.guide-p li i{width:26px;height:26px;border-radius:50%;background:var(--mark);display:grid;place-items:center;font:700 12px var(--f-mono);font-style:normal;color:#0b1a2c}
+.guide-p li b{display:block;font-size:14px}
+.guide-p li span{font-size:13px;color:var(--muted)}
+.guide-p label{display:flex;gap:8px;align-items:center;padding:12px 16px;border-top:1px solid var(--line);font-size:13px}
+
+.chat{right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(76px + env(safe-area-inset-bottom,0px));width:min(380px,calc(100vw - 32px));height:min(560px,calc(100vh - 140px));border-radius:24px;overflow:hidden}
+.msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.m{max-width:88%;padding:10px 13px;border-radius:16px;font-size:14px;animation:pop .35s var(--ease)}
+@keyframes pop{from{transform:translateY(8px) scale(.96);opacity:0}}
+.m.bot{background:var(--bg);border-bottom-left-radius:4px}
+.m.me{align-self:flex-end;background:var(--acc);color:#fff;border-bottom-right-radius:4px}
+.m .sugg{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.m .sugg button{display:grid;grid-template-columns:36px 1fr auto;gap:8px;align-items:center;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:5px 8px;font-size:13px;cursor:pointer;text-align:left}
+.m .sugg img{width:36px;height:36px;object-fit:contain}
+.typing span{display:inline-block;width:6px;height:6px;margin:0 2px;border-radius:50%;background:var(--muted);animation:ty 1s infinite}
+.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+@keyframes ty{50%{transform:translateY(-4px)}}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:0 14px 10px;scrollbar-width:none}
+.chips button{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:6px 11px;font-size:12px;cursor:pointer}
+.chat form{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}
+.chat input{flex:1;min-width:0;font:inherit;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--bg);color:var(--ink)}
+.chat form button{border:0;border-radius:12px;padding:0 16px;background:var(--acc);color:#fff;font-weight:700;cursor:pointer}
+.demo-note{font-size:11px;color:var(--muted);padding:0 16px 8px;font-family:var(--f-mono)}
+
+.drawer{top:0;right:0;bottom:0;width:min(440px,100vw);border-radius:28px 0 0 28px;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-right:env(safe-area-inset-right,0px);transform:translateX(105%);transition:transform .55s var(--ease)}
+.drawer.open{transform:none}
+.qlist{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:10px}
+.qi{display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;padding:8px;border:1px solid var(--line);border-radius:16px;animation:pop .35s var(--ease)}
+.qi > div{min-width:0}
+.qi img{width:56px;height:56px;object-fit:contain;background:var(--bg);border-radius:12px}
+.qi b{display:block;font-size:14px;line-height:1.2}
+.qi small{color:var(--muted);display:block;font-size:12px}
+.qty{display:flex;align-items:center;gap:6px}
+.qty button{width:28px;height:28px;border-radius:8px;border:1px solid var(--line);background:var(--bg);cursor:pointer}
+.qty span{min-width:22px;text-align:center;font-variant-numeric:tabular-nums;font-weight:700}
+.q-foot{padding:14px 16px;border-top:1px solid var(--line);display:grid;gap:8px}
+.q-foot small{color:var(--muted);text-align:center}
+.scrim{position:fixed;inset:0;z-index:75;background:rgba(11,26,44,.35);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .4s}
+.scrim.on{opacity:1;pointer-events:auto}
+
+.cmd{top:12vh;left:50%;width:min(620px,calc(100vw - 32px));transform:translateX(-50%);border-radius:22px;overflow:hidden;max-height:70vh}
+.cmd .in{display:flex;gap:10px;align-items:center;padding:16px;border-bottom:1px solid var(--line)}
+.cmd input{flex:1;min-width:0;border:0;outline:0;font:inherit;font-size:18px;background:none;color:var(--ink)}
+.cmd ul{list-style:none;margin:0;padding:8px;overflow-y:auto}
+.cmd li button{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;border:0;background:none;border-radius:12px;padding:8px;cursor:pointer}
+.cmd li button > span{min-width:0}
+.cmd li button img{width:44px;height:44px;object-fit:contain;background:var(--bg);border-radius:10px}
+.cmd li button small{color:var(--muted)}
+.cmd li button em{font-style:normal;font-family:var(--f-mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:3px 7px;border-radius:6px;background:var(--bg);color:var(--muted);white-space:nowrap}
+.cmd li button.act{background:var(--acc-soft)}
+
+.sheet{top:50%;left:50%;width:min(980px,calc(100vw - 32px));max-height:calc(100vh - 48px);transform:translate(-50%,-50%);border-radius:26px;overflow:hidden}
+.sheet-body{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:22px;padding:18px;overflow-y:auto}
+.broch{margin:0;display:grid;gap:6px;align-content:start}
+.broch img{width:100%;border-radius:16px;border:1px solid var(--line);cursor:zoom-in;background:var(--bg)}
+.broch figcaption{font-size:12px;color:var(--muted)}
+.noimg{border:1px dashed var(--line);border-radius:16px;padding:30px;color:var(--muted);text-align:center}
+.sheet-info{display:grid;gap:14px;align-content:start;min-width:0}
+.sheet-info p{margin:0;color:var(--muted)}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th,.tbl td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tbl th{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.tbl td.mono{font-size:13px;white-space:nowrap}
+.tbl .dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:8px;vertical-align:-1px;box-shadow:0 0 0 1px var(--line)}
+.tblwrap{overflow-x:auto}
+.sheet.zoom .sheet-body{grid-template-columns:1fr}
+.sheet.zoom .sheet-info{display:none}
+.sheet.zoom .broch img{cursor:zoom-out}
+@media (max-width:760px){.sheet-body{grid-template-columns:1fr}.sheet-info{order:-1}}
+
+.wipe{position:fixed;inset:0;z-index:90;pointer-events:none}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:95;transform:translate(-50%,30px);opacity:0;background:var(--ink);color:#fff;padding:11px 16px;border-radius:12px;font-size:14px;font-weight:600;transition:all .4s var(--ease);pointer-events:none;max-width:calc(100vw - 32px)}
+.toast.on{transform:translate(-50%,0);opacity:1}
+.flyer{position:fixed;z-index:96;pointer-events:none;object-fit:contain}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv.pre{transform:none}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="#top" aria-label="Apple Med Trading home">
+      <img src="img/logo.png" alt="">
+      <span><b>Apple Med</b><small>Trading L.L.C</small></span>
+    </a>
+    <div class="divs" role="tablist" aria-label="Division" id="divs">
+      <span class="pill" id="pill"></span>
+      <button role="tab" data-div="medical" aria-selected="true">Medical</button>
+      <button role="tab" data-div="dental" aria-selected="false">Dental</button>
+      <button role="tab" data-div="vet" aria-selected="false">Veterinary</button>
+    </div>
+    <div class="nav-act">
+      <button class="search" id="openCmd" aria-label="Search products or item codes">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+        <span>Product or item code</span><kbd>Ctrl K</kbd>
+      </button>
+      <button class="qbtn" id="openQuote">Quote <b id="qcount">0</b></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap">
+    <div class="banner">
+      <span>Concept preview. Medical and Dental show real Apple Med products, modelled in 3D from your brochures. Veterinary still shows sample items.</span>
+      <button id="bannerGuide">Open feature list</button>
+    </div>
+
+    <section class="hero" id="top">
+      <div class="hero-copy">
+        <span class="eyebrow" id="hEye">Medical division</span>
+        <h1 id="hTitle"></h1>
+        <p class="sub" id="hSub"></p>
+        <div class="config" id="config">
+          <div class="cfg-top">
+            <div><div class="cfg-brand" id="cfgBrand"></div><div class="cfg-name" id="cfgName"></div></div>
+            <span class="code" id="cfgCode"></span>
+          </div>
+          <div id="cfgOpts" style="display:grid;gap:14px"></div>
+          <div class="cta">
+            <button class="btn primary" id="cfgAdd">Add to quote</button>
+            <button class="btn ghost" id="cfgSheet">Spec sheet &amp; brochure</button>
+            <button class="btn ghost" id="heroAsk">Ask AI</button>
+          </div>
+        </div>
+      </div>
+      <div class="viewer-wrap" id="viewerWrap">
+        <div class="viewer" id="viewer">
+          <div class="grid-floor"></div>
+          <canvas id="hero3d" aria-label="3D product viewer, drag to rotate"></canvas>
+          <span class="vtag">360° · drag</span>
+          <div class="hot h1" id="hot0"><span></span><b></b></div>
+          <div class="hot h2" id="hot1"><span></span><b></b></div>
+          <div class="hot h3" id="hot2"><span></span><b></b></div>
+          <div class="vname"><strong id="vName"></strong><small id="vSpec"></small></div>
+        </div>
+        <div class="pchips" id="pchips" aria-label="Choose product"></div>
+      </div>
+    </section>
+
+    <section id="catalogue" class="rv">
+      <div class="sec-head">
+        <div>
+          <span class="eyebrow" id="catEye">Catalogue · Medical</span>
+          <h2>Inspect it before you order it.</h2>
+          <p class="lead">Every picture is a live 3D render. Pick a colour or size on the card and the picture and item code update with it.</p>
+        </div>
+        <label class="filter" for="catFilter">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+          <input id="catFilter" placeholder="Filter by name or code" autocomplete="off">
+        </label>
+      </div>
+      <div class="brands" id="brands" aria-label="Filter by brand"></div>
+      <div class="pgrid" id="pgrid"></div>
+    </section>
+
+    <section id="coverage" class="rv">
+      <div class="sec-head"><div>
+        <span class="eyebrow">Delivery coverage</span>
+        <h2>Tap an emirate to see when your order lands.</h2>
+      </div></div>
+      <div class="cov">
+        <div class="map" id="map"></div>
+        <div class="cov-card" id="covCard"></div>
+      </div>
+    </section>
+
+    <section id="flow" class="rv">
+      <div class="sec-head"><div>
+        <span class="eyebrow">Ordering</span>
+        <h2>From search to doorstep in four steps.</h2>
+      </div></div>
+      <div class="flow">
+        <ol class="steps">
+          <li><div><b>Search or ask</b><span>Type a product name or an item code like EM-2174, or ask the AI assistant.</span></div></li>
+          <li><div><b>Pick size and colour</b><span>The 3D model and item code change as you choose.</span></div></li>
+          <li><div><b>Send on WhatsApp</b><span>Your quote goes to the sales team in one tap, codes included.</span></div></li>
+          <li><div><b>Track delivery</b><span>Follow the van live, from warehouse to your clinic door.</span></div></li>
+        </ol>
+        <div class="track" id="track">
+          <div class="track-top"><strong>Order AM-24817</strong><span class="status" id="tStatus">Packed</span></div>
+          <div class="rail"><i id="tBar"></i><em id="tDot"></em></div>
+          <ol class="tl" id="tl">
+            <li><b>09:12</b>Confirmed</li>
+            <li><b>10:05</b>Packed</li>
+            <li><b>11:40</b>Out for delivery</li>
+            <li><b>13:30</b>Delivered</li>
+          </ol>
+          <button class="btn ghost" id="tNext">Advance to next stage</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="careers" class="rv">
+      <div class="sec-head"><div>
+        <span class="eyebrow">Careers</span>
+        <h2>Join the team that keeps clinics stocked.</h2>
+      </div></div>
+      <div class="jobs" id="jobs"></div>
+    </section>
+
+    <section id="contact" class="rv">
+      <div class="sec-head"><div>
+        <span class="eyebrow">Contact</span>
+        <h2>Talk to Apple Med sales.</h2>
+      </div></div>
+      <div class="contact" id="contactBox">
+        <div><span>WhatsApp</span><b>+971 50 281 7024</b><a href="https://wa.me/971502817024" target="_blank" rel="noopener">Open WhatsApp chat →</a></div>
+        <div><span>Email</span><b>sales@applemed.ae</b><a href="#" data-copy="sales@applemed.ae">Copy address</a></div>
+        <div><span>Website</span><b>www.applemed.ae</b><a href="https://www.applemed.ae" target="_blank" rel="noopener">Visit current site →</a></div>
+        <div><span>Serving</span><b>UAE · Oman</b></div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="wrap">Apple Med Trading L.L.C · concept page. Medical and Dental product details come from your brochures. Veterinary products, delivery times, order tracking and job listings are samples.</div>
+  </footer>
+</main>
+
+<button class="fab guide" id="guideFab">Feature list</button>
+<button class="fab ai" id="aiFab"><i></i>Ask Apple Med AI</button>
+
+<div class="scrim" id="scrim"></div>
+
+<aside class="panel guide-p" id="guideP" hidden>
+  <div class="p-head"><strong id="gTitle">Feature ideas</strong><button class="x" data-close aria-label="Close">✕</button></div>
+  <ol id="glist"></ol>
+  <label for="showBadges"><input type="checkbox" id="showBadges" checked> Show numbered markers on the page</label>
+</aside>
+
+<aside class="panel chat" id="chat" hidden>
+  <div class="p-head"><strong>Apple Med AI</strong><button class="x" data-close aria-label="Close">✕</button></div>
+  <div class="msgs" id="msgs"></div>
+  <div class="demo-note">Demo replies. The live site would connect a real AI model.</div>
+  <div class="chips" id="chatChips">
+    <button>Sharps container 5 L</button><button>EM-3245</button><button>Dental products</button><button>Delivery to Fujairah</button><button>Are you hiring?</button>
+  </div>
+  <form id="chatForm"><input id="chatIn" placeholder="Ask about a product, code or delivery" autocomplete="off"><button>Send</button></form>
+</aside>
+
+<aside class="panel drawer" id="drawer" aria-label="Quote">
+  <div class="p-head"><strong>Your quote</strong><button class="x" data-close aria-label="Close">✕</button></div>
+  <div class="qlist" id="qlist"></div>
+  <div class="q-foot" id="qfoot"></div>
+</aside>
+
+<div class="panel cmd" id="cmd" hidden role="dialog" aria-label="Search products">
+  <div class="in">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+    <input id="cmdIn" placeholder="Name or code, e.g. EM-2174" autocomplete="off">
+    <button class="x" data-close aria-label="Close">✕</button>
+  </div>
+  <ul id="cmdList"></ul>
+</div>
+
+<div class="panel sheet" id="sheet" hidden role="dialog" aria-label="Spec sheet">
+  <div class="p-head"><strong id="shTitle"></strong><button class="x" data-close aria-label="Close">✕</button></div>
+  <div class="sheet-body" id="shBody"></div>
+</div>
+
+<div class="wipe" id="wipe" hidden></div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+
+/* ================= DATA ================= */
+const DIV = {
+  medical:{label:'Medical', acc:'#1d5fd8', acc2:'#16a39b',
+    title:'Hospital supplies, delivered <span class="hl">before the next shift.</span>',
+    sub:'Euromed consumables and trusted brands for hospitals, clinics and pharmacies across the UAE and Oman. Pick a size or colour, then add it to your quote.'},
+  dental:{label:'Dental', acc:'#0d9488', acc2:'#3ba7e8',
+    title:'Precision tools for <span class="hl">perfect smiles.</span>',
+    sub:'Matrix systems, liners and impression trays for dental clinics. Spin every product in 3D before you order.'},
+  vet:{label:'Veterinary', acc:'#ee5a24', acc2:'#7b4dff',
+    title:'Care supplies for every patient, <span class="hl">paws included.</span>',
+    sub:'Sample items for now. Send the veterinary range and it gets the same 3D treatment.'}
+};
+const P = [
+  {id:'idband',d:'medical',brand:'Euromed',n:'Patient ID Band',s:'Vinyl · tamper-proof locking button',m:'band',c:'#1f6fe0',img:'idband',
+   sp:[['Material','Vinyl'],['Closure','Locking button'],['Use','Single-use']],
+   desc:'Secure wristbands worn by hospital patients to prevent identification errors. Durable vinyl, single-use, with a plastic locking button that stops tampering and a clear write-on area.',
+   specs:[['Material','High-quality vinyl'],['Closure','Tamper-proof plastic button'],['Write-on fields','Name · MRN · DOB'],['Use','Standard, single-use'],['For','Hospitals, clinics, healthcare facilities']],
+   opts:[{name:'Colour',vals:[
+     {l:'Blue',code:'EM-3245',c:'#1f6fe0'},{l:'White',code:'EM-3247',c:'#eef1f4'},{l:'Yellow',code:'EM-3244',c:'#f6cf1d'},{l:'Pink',code:'EM-3243',c:'#ef5aa6'},{l:'Red',code:'EM-3246',c:'#e3262e'},
+     {l:'Paediatric blue',code:'EM-3249',c:'#1f6fe0',k:.8},{l:'Paediatric pink',code:'EM-3248',c:'#ef5aa6',k:.8}]}]},
+  {id:'sharps',d:'medical',brand:'Euromed',n:'Sharps Container',s:'NFX 30-500 · 1 to 13 litres',m:'sharps',c:'#f5cf00',img:'sharps',
+   sp:[['Standard','NFX 30-500'],['Class','UN 3291'],['Disposal','Incineration']],
+   desc:'Rigid yellow containers for contaminated sharps, certified for the transport of dangerous materials. Do not fill above the line and do not force waste in.',
+   specs:[['Standard','NFX 30-500'],['Waste class','UN 3291 clinical waste'],['Disposal','Destroy by incineration'],['Certified','Transport of dangerous materials'],['Colour','Yellow']],
+   opts:[{name:'Size',vals:[{l:'1 L',code:'EM-2172',k:.62},{l:'3 L',code:'EM-2173',k:.74},{l:'5 L',code:'EM-2174',k:.84,big:1},{l:'10 L',code:'EM-2175',k:.96,big:1},{l:'13 L',code:'EM-2177',k:1.04,big:1}]}]},
+  {id:'eurowrap',d:'medical',brand:'Eurowrap',n:'Self-Adherent Elastic Bandage',s:'5 · 7.5 · 10 cm · 11 colours',m:'roll',c:'#1f4fd8',img:'eurowrap',
+   sp:[['Type','Self-adherent'],['Feel','Breathable'],['Use','Sports & medical']],
+   desc:'Lightweight, breathable cohesive bandage that sticks to itself. Elastic and flexible for sports and medical support.',
+   specs:[['Type','Self-adherent elastic'],['Widths','5 cm · 7.5 cm · 10 cm'],['Colours','11'],['Properties','Lightweight, breathable, flexible'],['For','Sports and medical use']],
+   opts:[{name:'Width',vals:[{l:'10 cm',w:1},{l:'7.5 cm',w:.78},{l:'5 cm',w:.56}]},
+         {name:'Colour',vals:[{l:'Blue',c:'#1f4fd8'},{l:'Skin',c:'#d8b48c'},{l:'Red',c:'#d7263d'},{l:'Black',c:'#26272b'},{l:'Green',c:'#1f9d4b'},{l:'Purple',c:'#6b3fc9'},{l:'Yellow',c:'#f7c815'},{l:'Orange',c:'#f47a20'},{l:'Pink',c:'#f05aa8'},{l:'White',c:'#f2f2f2'},{l:'Grey',c:'#8a8f98'}]}]},
+  {id:'hme',d:'medical',brand:'Euromed',n:'HME Filter',s:'Heat & moisture exchanger · adult',m:'hme',c:'#35cdb0',img:'hme',code:'EM-7363',
+   sp:[['Tidal volume','150 – 1500 mL'],['Dead space','35 mL'],['Resistance','< 0.2 kPa']],
+   desc:'Compact heat and moisture exchanger for mechanical ventilation and anaesthesia circuits. Retains heat and moisture, filters bacteria and viruses, and keeps breathing resistance low.',
+   specs:[['Size','Adult'],['Tidal volume','150 – 1500 mL'],['Dead space','35 mL (approx.)'],['Moisture output','≥ 28 mg H₂O/L (approx.)'],['Resistance','< 0.2 kPa at 30 L/min'],['Sterility','Sterile, EO'],['Packaging','1 pc / pack'],['Used in','Ventilation, anaesthesia, ICU, transport']]},
+  {id:'lungex',d:'medical',brand:'Bio-Med',n:'Lung Exerciser',s:'3-ball incentive spirometer',m:'lung',c:'#3aa0e8',img:'lungex',
+   sp:[['Chambers','600 · 900 · 1200'],['Unit','cc / sec'],['Sterility','Non-sterile']],
+   desc:'Three-ball breathing trainer that helps patients improve lung capacity and practise deep breathing. Safe and easy to use at home or on the ward.',
+   specs:[['Chambers','3 (600, 900, 1200 cc/sec)'],['Balls','Red · yellow · green'],['Sterility','Non-sterile'],['Use','Improves lung capacity, promotes deep breathing']]},
+  {id:'gauze',d:'medical',brand:'Euromed',n:'Gauze Swabs',s:'10 × 10 cm · 12-ply · non-sterile',m:'gauze',c:'#d9a521',img:'gauze',code:'EM-1967',
+   sp:[['Size','10 × 10 cm'],['Ply','12'],['Pack','100 pcs']],
+   desc:'Soft, highly absorbent 100% cotton gauze swabs for everyday wound management.',
+   specs:[['Size','10 cm × 10 cm'],['Ply','12'],['Material','100% cotton'],['Sterility','Non-sterile'],['Pack','100 pcs']]},
+  {id:'povidone',d:'medical',brand:'Euromed',n:'Povidone-Iodine Pre Pad',s:'Antiseptic · 100 swabs per box',m:'sachet',c:'#9b1b3a',img:'povidone',
+   sp:[['Type','Antiseptic'],['Pack','100 swabs'],['Packing','Individually sealed']],
+   desc:'Antiseptic pads for skin disinfection before injections, IV lines, catheter care and minor surgery. Broad spectrum against bacteria, fungi and viruses.',
+   specs:[['Type','Povidone-iodine antiseptic'],['Size','65 × 30 (as printed on pack)'],['Fabric','Non-woven, absorbent'],['Pack','100 swabs, individually packed'],['Use','External use only']]},
+  {id:'bandages',d:'medical',brand:'Euromed',n:'Bandages, Strip & Spot',s:'Polyurethane film · 100 per pack',m:'strip',c:'#e7b78d',img:'bandages',
+   sp:[['Material','PU film'],['Sterile','Yes'],['Latex','Latex-free']],
+   desc:'Sterile, self-adhesive plasters with a waterproof, breathable membrane. Hypoallergenic and easy to tear for small cuts and abrasions.',
+   specs:[['Material','Polyurethane film'],['Colour','Skin'],['Properties','Sterile, waterproof, breathable, hypoallergenic, latex-free'],['Pack','100 pcs / pkt']],
+   opts:[{name:'Type',vals:[{l:'Strip 72 × 25 mm',code:'EM-0302',m:'strip'},{l:'Spot 22 mm',code:'EM-0301',m:'spot'}]}]},
+  {id:'ivd',d:'medical',brand:'Euromed',n:'IV Fixation Dressing',s:'Transparent · 6 × 8 cm',m:'ivd',c:'#c8a43a',img:'ivdressing',code:'EM-2451',
+   sp:[['Size','6 × 8 cm'],['Pack','50 / box'],['Film','Transparent']],
+   desc:'Transparent film dressing that secures IV catheters while letting staff see the insertion site. Waterproof, breathable and gentle for extended wear.',
+   specs:[['Size','6 × 8 cm'],['Colour','Transparent'],['Properties','Waterproof, breathable, hypoallergenic, latex-free'],['Pack','50 pcs / box']]},
+  {id:'underpads',d:'medical',brand:'Euromed',n:'Premium Under Pads',s:'60 × 90 cm · super absorbent',m:'pad',c:'#3d8fe0',img:'underpads',code:'EM-4685',
+   sp:[['Size','60 × 90 cm'],['Pack','15 pcs'],['Core','Super absorbent']],
+   desc:'Absorbent, leak-proof pads for beds and chairs. Used in hospitals, elderly care, baby care, postnatal care and incontinence care.',
+   specs:[['Size','60 × 90 cm'],['Pack','15 pcs'],['Layers','Soft top sheet, absorbent core, leak-proof backing'],['Properties','Super absorbent, leak proof, breathable']]},
+  {id:'calciplus',d:'dental',brand:'R&D Series',n:'Calciplus LC',s:'Light-cure calcium silicate paste',m:'dsyr',c:'#1a2d6b',img:'calciplus',code:'TP-2015',
+   sp:[['Cure','Light, 20 s'],['Pack','2 g syringe'],['Property','Radiopaque']],
+   desc:'Resin-modified, light-cured, radiopaque liner and base. Releases calcium, hydroxyl and phosphate ions to support secondary dentin formation.',
+   specs:[['Type','Resin-modified light-cured liner & base'],['Packing','2 g syringe with applicators'],['Ion release','Ca²⁺ · OH⁻ · PO₄³⁻'],['Properties','Radiopaque, biocompatible, high filler load, low shrinkage'],['Uses','Direct and indirect pulp capping, liner under amalgam and composites'],['Light cure','20 seconds']]},
+  {id:'mband',d:'dental',brand:'Hygendo',n:'Matrix Bands',s:'Stainless steel · 50 units',m:'mband',c:'#b9c3cc',img:'matrix',
+   sp:[['Material','Stainless steel'],['Box','50 units'],['Use','Class II']],
+   desc:'Automatic, universal matrix bands for tight contacts and smooth contours in Class II restorations. Uniform thickness and smooth edges.',
+   specs:[['Material','Premium stainless steel'],['Contents','50 units per box'],['Use','Class II restorations, one-time use']],
+   opts:[{name:'Type',vals:[{l:'Straight 5 × 0.030',code:'EM-50398',h:.5},{l:'Straight 6.3 × 0.030',code:'EM-50402',h:.63},{l:'Curved 5 × 0.038',code:'EM-50400',h:.5,cv:1},{l:'Curved 6.3 × 0.038',code:'EM-50404',h:.63,cv:1}]}]},
+  {id:'retainer',d:'dental',brand:'Hygendo',n:'Matrix Retainer',s:'For Hygendo matrix bands',m:'retainer',c:'#169fc0',img:'matrix',code:'EM-50403',
+   sp:[['Brand','Hygendo'],['Pairs with','Matrix bands'],['Code','EM-50403']],
+   desc:'Ergonomic retainer used with Hygendo automatic matrix bands for precise placement.',
+   specs:[['Brand','Hygendo'],['Use','With Hygendo matrix bands'],['For','Professional dental use only']]},
+  {id:'trays',d:'dental',brand:'Euromed',n:'Paediatric Impression Trays',s:'Non-toxic plastic · 2 per pack',m:'tray',c:'#e8262b',img:'trays',
+   sp:[['Pack','2 pcs, sealed'],['Material','Non-toxic plastic'],['For','Children']],
+   desc:'Lightweight plastic trays sized for children’s developing arches. Accurate impressions with comfort and minimal gag reflex.',
+   specs:[['Material','Non-toxic, durable plastic'],['Pack','2 pcs per pack, individually sealed'],['Certification','CE 0123']],
+   opts:[{name:'Size',vals:[{l:'#2 Red · 6.5 × 4.5 cm',code:'EM-13807',c:'#e8262b'},{l:'#1 Orange · 5.5 × 4.0 cm',code:'EM-13865',c:'#f7871f',k:.88}]}]},
+  {id:'vet-vac',d:'vet',sample:1,brand:'Sample',n:'Vaccine Vial',s:'Multi-dose · 10 mL',m:'vial',c:'#ee5a24',sp:[['Doses','10'],['Volume','10 mL'],['Store','2 – 8 °C']]},
+  {id:'vet-syr',d:'vet',sample:1,brand:'Sample',n:'Oral Dosing Syringe',s:'Reusable · 20 mL',m:'syringe',c:'#7b4dff',sp:[['Volume','20 mL'],['Tip','Oral'],['Reuse','Yes']]},
+  {id:'vet-bol',d:'vet',sample:1,brand:'Sample',n:'Bolus Capsule',s:'Slow release',m:'capsule',c:'#ffc23d',sp:[['Release','21 days'],['For','Cattle'],['Pack','20']]},
+  {id:'vet-band',d:'vet',sample:1,brand:'Sample',n:'Cohesive Bandage',s:'7.5 cm · neon pink',m:'roll',c:'#ff4fa3',sp:[['Width','7.5 cm'],['Stretch','4.5 m'],['Colour','Neon']]},
+  {id:'vet-spray',d:'vet',sample:1,brand:'Sample',n:'Wound Spray',s:'Antiseptic · 200 mL',m:'can',c:'#22c55e',sp:[['Volume','200 mL'],['Type','Antiseptic'],['Nozzle','360°']]},
+];
+const byId = Object.fromEntries(P.map(p => [p.id, p]));
+const EMIRATES = [
+  {n:'Sharjah',x:262,y:110,eta:'Same day',cut:'Order by 1 pm',van:'Hourly loop',hub:true},
+  {n:'Ajman',x:276,y:94,eta:'Same day',cut:'Order by 1 pm',van:'Every 2 h'},
+  {n:'Umm Al Quwain',x:292,y:76,eta:'Same day',cut:'Order by 11 am',van:'Twice daily'},
+  {n:'Ras Al Khaimah',x:322,y:44,eta:'Next morning',cut:'Order by 5 pm',van:'Daily'},
+  {n:'Fujairah',x:368,y:118,eta:'Next morning',cut:'Order by 5 pm',van:'Daily'},
+  {n:'Dubai',x:228,y:132,eta:'Same day',cut:'Order by 1 pm',van:'Every 2 h'},
+  {n:'Abu Dhabi',x:120,y:196,eta:'Next day',cut:'Order by 4 pm',van:'Daily'},
+];
+const FEATURES = [
+  ['Division switch','Medical, Dental and Veterinary each re-theme the site with a 3D colour-wipe transition.','#divs'],
+  ['Live 3D product viewer','Drag to spin. The lung exerciser balls and under-pad layers animate.','#viewer'],
+  ['Floating spec labels','Key specs hover around the product and change with it.','#hot0'],
+  ['Colour & size picker','Choose a variant and the 3D model, picture and item code update instantly.','#config'],
+  ['Item-code search','Ctrl K or the search button. Type a name or a code like EM-2174.','#openCmd'],
+  ['Add to quote with fly animation','The product picture flies into the quote button.','#cfgAdd'],
+  ['Quote drawer with WhatsApp send','Quantities, item codes, and one tap to send the list on WhatsApp.','#openQuote'],
+  ['Spec sheet & brochure','Full specs, every item code, and the original brochure in one window.','#cfgSheet'],
+  ['Brand filter','Euromed, Eurowrap, Bio-Med, Hygendo, R&D Series.','#brands'],
+  ['3D-rendered catalogue','Product pictures are rendered from the 3D models. Cards tilt with your cursor.','#pgrid'],
+  ['AI assistant','Answers product, code and delivery questions and suggests items.','#aiFab'],
+  ['Delivery coverage map','Tap an emirate to see delivery time and order cut-off.','#map'],
+  ['Live order tracking','Customers follow each order stage by stage.','#track'],
+  ['Scroll-driven 3D reveals','Sections tilt into place and a progress bar tracks your scroll.','#catalogue'],
+  ['Careers quick-apply','Apply with name, phone and CV.','#jobs'],
+  ['Contact strip','WhatsApp, email and website, ready to copy or open.','#contactBox'],
+];
+const JOBS = [
+  ['Medical Sales Representative','Sharjah & Northern Emirates',['Full time','Field sales','Driving licence']],
+  ['Dental Product Specialist','Dubai',['Full time','Clinical demos','BDS preferred']],
+  ['Warehouse & Logistics Coordinator','Ajman',['Full time','Cold chain','Day shift']],
+];
+const WA = '971502817024';
+
+const sel = {};
+P.forEach(p => sel[p.id] = (p.opts || []).map(() => 0));
+function vals(p, s = sel[p.id]){ const v = {}; (p.opts || []).forEach((o,i) => Object.assign(v, o.vals[s[i] || 0])); return v; }
+const colourOf = (p, s) => vals(p, s).c || p.c;
+const codeOf = (p, s) => vals(p, s).code || p.code || '';
+const varLabel = (p, s = sel[p.id]) => (p.opts || []).map((o,i) => o.vals[s[i] || 0].l).join(' · ');
+const keyOf = (p, s = sel[p.id]) => p.id + '|' + s.join('-');
+
+let cur = 'medical', curProd = null, brandF = 'All', quote = [];
+try { quote = JSON.parse(localStorage.getItem('am-quote-v2') || '[]').filter(q => byId[q.id]); } catch(e) { quote = []; }
+
+/* ================= 3D ================= */
+const T = window.THREE;
+const thumbs = {};
+function canvasTex(w, h, draw){
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const x = c.getContext('2d'); draw(x, w, h);
+  const t = new T.CanvasTexture(c); t.anisotropy = 4; return t;
+}
+const F = (wt, px) => `${wt} ${px}px Figtree, "Helvetica Neue", Arial, sans-serif`;
+function euromed(x, cx, y, px, col){ x.fillStyle = col || '#c8102e'; x.font = F(800, px); x.textAlign = 'center'; x.fillText('euromed', cx, y); }
+
+function buildModel(p, s, noK){
+  const v = vals(p, s); const colHex = v.c || p.c; const col = new T.Color(colHex);
+  const model = v.m || p.m;
+  const g = new T.Group();
+  const plastic = (c, o={}) => new T.MeshPhysicalMaterial(Object.assign({color:c, roughness:.34, metalness:0, clearcoat:.6, clearcoatRoughness:.25}, o));
+  const glass = (c=0xeaf4ff, op=.3) => new T.MeshPhysicalMaterial({color:c, roughness:.05, metalness:0, transparent:true, opacity:op, clearcoat:1, side:T.DoubleSide, depthWrite:false});
+  const metal = new T.MeshStandardMaterial({color:0xdfe5ec, metalness:.85, roughness:.22, side:T.DoubleSide});
+  const white = plastic(0xf6f8fa);
+  const texMat = (tex, o={}) => new T.MeshStandardMaterial(Object.assign({map:tex, roughness:.55}, o));
+  const lathe = (pts, seg=64) => new T.LatheGeometry(pts.map(([a,b]) => new T.Vector2(a,b)), seg);
+  const mesh = (geo, m, x=0, y=0, z=0, parent=g) => { const o = new T.Mesh(geo, m); o.position.set(x,y,z); parent.add(o); return o; };
+  const rshape = (w, h, r) => { const sh = new T.Shape(), x = -w/2, y = -h/2; sh.moveTo(x+r,y); sh.lineTo(x+w-r,y); sh.quadraticCurveTo(x+w,y,x+w,y+r); sh.lineTo(x+w,y+h-r); sh.quadraticCurveTo(x+w,y+h,x+w-r,y+h); sh.lineTo(x+r,y+h); sh.quadraticCurveTo(x,y+h,x,y+h-r); sh.lineTo(x,y+r); sh.quadraticCurveTo(x,y,x+r,y); return sh; };
+  const rbox = (w, h, d, r, m, x=0, y=0, z=0, parent=g) => {
+    const bev = Math.min(.03, d*.3);
+    const geo = new T.ExtrudeGeometry(rshape(w, h, r), {depth:d, bevelEnabled:true, bevelThickness:bev, bevelSize:Math.min(.03, r*.4), bevelSegments:3, curveSegments:10});
+    geo.translate(0,0,-d/2); return mesh(geo, m, x, y, z, parent);
+  };
+  const plane = (w, h, tex, x, y, z, parent=g, o={}) => mesh(new T.PlaneGeometry(w, h), texMat(tex, o), x, y, z, parent);
+  const up = new T.Vector3(0,1,0);
+  const tick = [];
+
+  switch(model){
+    case 'band': {
+      const r = .95, h = .52;
+      const bandM = plastic(col, {side:T.DoubleSide, roughness:.45});
+      mesh(new T.CylinderGeometry(r, r, h, 80, 1, true, 0, 5.2), bandM);
+      const lab = canvasTex(512, 160, (x,w,hh) => {
+        x.fillStyle = '#ffffff'; x.fillRect(0,0,w,hh);
+        x.fillStyle = '#334'; x.font = F(600, 22); x.textAlign = 'left';
+        ['Name:','MRN:','DOB:'].forEach((t,i) => { const y = 42 + i*40; x.fillText(t, 22, y); x.fillRect(100, y+4, 250, 2); });
+        euromed(x, 430, 140, 34);
+      });
+      mesh(new T.CylinderGeometry(r+.012, r+.012, h*.8, 48, 1, true, .45, 1.5), texMat(lab));
+      mesh(new T.CylinderGeometry(r+.03, r+.03, h*.92, 40, 1, true, 4.55, 1.6), bandM);
+      const dark = plastic(new T.Color(colHex).multiplyScalar(.55));
+      [4.85, 5.2, 5.55, 5.9].forEach((a,i) => {
+        const btn = i === 0;
+        const o = mesh(new T.CylinderGeometry(btn?.13:.05, btn?.13:.05, btn?.12:.02, 28), btn ? white : dark, Math.sin(a)*(r+.05), 0, Math.cos(a)*(r+.05));
+        o.quaternion.setFromUnitVectors(up, new T.Vector3(Math.sin(a), 0, Math.cos(a)));
+      });
+      g.rotation.set(.38, -.35, .1);
+      break;
+    }
+    case 'sharps': {
+      const big = !!v.big, yel = plastic(0xf5cf00, {roughness:.4});
+      rbox(1.6, 1.9, 1.3, .2, yel);
+      const lid = big ? yel : white;
+      rbox(1.78, .3, 1.46, .14, lid, 0, 1.08, 0);
+      const hole = rbox(.6, .32, .05, .1, plastic(0x2a2f37), 0, 1.25, .2); hole.rotation.x = -Math.PI/2;
+      if (big) mesh(new T.TorusGeometry(.72, .05, 12, 48, Math.PI), yel, 0, 1.26, 0);
+      const lab = canvasTex(512, 440, (x,w,h) => {
+        if (big) { x.fillStyle = '#fff'; x.fillRect(0,0,w,h); x.fillStyle = '#f5cf00'; x.fillRect(0,0,w,40); x.fillStyle = '#b5121b'; x.fillRect(0,40,w,110); }
+        else { x.fillStyle = '#d8231f'; x.fillRect(0,0,w,h); }
+        x.fillStyle = '#fff'; x.font = F(800, 26); x.textAlign = 'center';
+        x.fillText('DESTROY BY INCINERATION', w/2, big ? 85 : 50);
+        x.font = F(700, 20); x.fillText('CONTAMINATED SHARPS ONLY · UN 3291', w/2, big ? 125 : 82);
+        x.fillStyle = big ? '#b5121b' : '#fff'; x.font = F(800, 46); x.textAlign = 'left'; x.fillText('DANGER', 30, big ? 215 : 160);
+        const cx = 400, cy = big ? 235 : 205;
+        x.fillStyle = '#f5cf00'; x.strokeStyle = '#111'; x.lineWidth = 6; x.beginPath(); x.moveTo(cx, cy-80); x.lineTo(cx+80, cy+60); x.lineTo(cx-80, cy+60); x.closePath(); x.fill(); x.stroke();
+        x.fillStyle = '#111'; for (let i=0;i<3;i++){ const a = i*2.094 - 1.57; x.beginPath(); x.arc(cx+Math.cos(a)*20, cy+18+Math.sin(a)*20, 16, 0, 6.29); x.fill(); }
+        x.fillStyle = '#f5cf00'; x.beginPath(); x.arc(cx, cy+18, 9, 0, 6.29); x.fill();
+        x.fillStyle = big ? '#334' : '#fff'; x.font = F(600, 18); x.textAlign = 'left'; x.fillText('Conforms to NFX 30-500', 30, big ? 260 : 210);
+        x.fillText('Do not force waste in', 30, big ? 290 : 240);
+        euromed(x, 120, big ? 385 : 365, 42, big ? '#c8102e' : '#fff');
+        x.fillStyle = big ? '#b5121b' : '#fff'; x.font = F(800, 60); x.textAlign = 'right'; x.fillText((v.l || '').replace(' ', ''), w-30, big ? 400 : 385);
+      });
+      plane(1.32, 1.14, lab, 0, -.12, .69);
+      g.rotation.set(.12, -.4, 0);
+      break;
+    }
+    case 'roll': {
+      const h = 1.25 * (v.w || .8), c = new T.Color(colHex);
+      const text = p.brand === 'Eurowrap';
+      const tex = canvasTex(1024, 256, (x,w,hh) => {
+        x.fillStyle = colHex; x.fillRect(0,0,w,hh);
+        x.globalAlpha = .18; x.strokeStyle = '#000'; x.lineWidth = 2;
+        for (let y=6;y<hh;y+=9){ x.beginPath(); for (let i=0;i<=w;i+=16) x.lineTo(i, y + Math.sin(i*.09 + y)*2.2); x.stroke(); }
+        x.globalAlpha = .12; x.strokeStyle = '#fff'; for (let y=2;y<hh;y+=9){ x.beginPath(); for (let i=0;i<=w;i+=16) x.lineTo(i, y + Math.cos(i*.08 + y)*2); x.stroke(); }
+        x.globalAlpha = 1;
+        if (text) { x.font = F(800, 64); x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = colHex.toLowerCase() === '#d7263d' ? '#7a0c18' : '#d7263d'; x.fillText('eurowrap', w*.25, hh/2); x.fillText('eurowrap', w*.75, hh/2); }
+      });
+      mesh(new T.CylinderGeometry(1, 1, h, 72, 1, true), texMat(tex, {roughness:.85, side:T.DoubleSide}));
+      const side = plastic(c.clone().multiplyScalar(.82), {roughness:.9, clearcoat:0, side:T.DoubleSide});
+      [h/2, -h/2].forEach(y => { const rg = mesh(new T.RingGeometry(.42, 1, 72), side, 0, y, 0); rg.rotation.x = -Math.PI/2; });
+      mesh(new T.CylinderGeometry(.42, .42, h, 48, 1, true), plastic(0xf2f2f2, {side:T.DoubleSide, roughness:.8}));
+      g.rotation.set(.32, .5, 0);
+      break;
+    }
+    case 'hme': {
+      const tint = glass(new T.Color(colHex), .62);
+      mesh(lathe([[.17,1.5],[.25,1.5],[.25,.78],[.32,.64],[.74,.5],[.8,.4],[.8,-.3],[.74,-.42],[.33,-.56],[.28,-.7],[.28,-1.5],[.19,-1.5]]), tint);
+      mesh(new T.CylinderGeometry(.7, .7, .3, 48), plastic(0xfafafa, {roughness:.9, clearcoat:0}), 0, .05, 0);
+      for (let i=0;i<5;i++){ const t = mesh(new T.TorusGeometry(.29, .025, 8, 40), tint, 0, -.85 - i*.12, 0); t.rotation.x = Math.PI/2; }
+      const port = mesh(new T.CylinderGeometry(.08, .1, .45, 20), tint, .58, .72, 0); port.rotation.z = -1;
+      const cap = mesh(new T.CylinderGeometry(.12, .12, .16, 20), white, .79, .86, 0); cap.rotation.z = -1;
+      g.rotation.set(.25, 0, .35);
+      break;
+    }
+    case 'lung': {
+      const base = rbox(2.9, 1.2, .28, .14, white, 0, -1.2, 0); base.rotation.x = -Math.PI/2;
+      const cols = [0xe23b3b, 0xf2c21a, 0x22a04b], labels = ['600cc','900cc','1200cc'], balls = [];
+      [-.85, 0, .85].forEach((x, i) => {
+        mesh(new T.CylinderGeometry(.34, .34, 2, 40, 1, true), glass(0xeaf6ff, .28), x, 0, 0);
+        mesh(new T.CylinderGeometry(.38, .38, .22, 32), white, x, -.98, 0);
+        balls.push(mesh(new T.SphereGeometry(.27, 32, 20), plastic(cols[i], {clearcoat:1, roughness:.15}), x, -.6, 0));
+        const lt = canvasTex(128, 64, (c,w,h) => { c.clearRect(0,0,w,h); c.fillStyle = 'rgba(40,50,70,.8)'; c.font = F(700, 22); c.textAlign = 'center'; c.fillText(labels[i], w/2, 30); c.font = F(600, 14); c.fillText('PER/SEC', w/2, 52); });
+        plane(.5, .25, lt, x, .55, .345, g, {transparent:true, depthWrite:false});
+      });
+      mesh(new T.BoxGeometry(2.7, .16, .5), glass(0xeaf6ff, .35), 0, 1.05, 0);
+      mesh(new T.CylinderGeometry(.12, .12, 2.1, 20, 1, true), glass(0xeaf6ff, .35), -1.42, 0, 0);
+      const mp = mesh(new T.CylinderGeometry(.1, .2, .45, 24), white, -1.75, -.85, .1); mp.rotation.z = 1.2;
+      const curve = new T.CatmullRomCurve3([new T.Vector3(1.28,-.75,.1), new T.Vector3(1.55,-.3,.25), new T.Vector3(1.65,.5,.25), new T.Vector3(1.4,1.2,.1), new T.Vector3(1,1.32,0)]);
+      const green = plastic(0x22a04b, {roughness:.5});
+      mesh(new T.TubeGeometry(curve, 60, .085, 12), green);
+      for (let i=0;i<=26;i++){ const t = i/26, pt = curve.getPointAt(t), tg = curve.getTangentAt(t); const rb = mesh(new T.TorusGeometry(.09, .025, 6, 18), green, pt.x, pt.y, pt.z); rb.quaternion.setFromUnitVectors(new T.Vector3(0,0,1), tg); }
+      tick.push(tm => balls.forEach((b,i) => { b.position.y = -.6 + Math.max(0, Math.sin(tm*.0018 - i*.7)) * (1.15 - i*.3); }));
+      g.rotation.set(.12, -.35, 0);
+      break;
+    }
+    case 'gauze': {
+      const weave = canvasTex(256, 256, (x,w,h) => { x.fillStyle = '#fbfbf8'; x.fillRect(0,0,w,h); x.strokeStyle = 'rgba(160,160,150,.45)'; x.lineWidth = 2; for (let i=0;i<w;i+=10){ x.beginPath(); x.moveTo(i,0); x.lineTo(i,h); x.stroke(); x.beginPath(); x.moveTo(0,i); x.lineTo(w,i); x.stroke(); } });
+      const pad = new T.MeshStandardMaterial({map:weave, roughness:.95});
+      for (let i=0;i<9;i++){ const s = mesh(new T.BoxGeometry(1.5, .05, 1.5), pad, -.75 + Math.sin(i)*.03, -1 + i*.06, .55 + Math.cos(i*1.7)*.03); s.rotation.y = Math.sin(i*2.1)*.06; }
+      const loose = mesh(new T.BoxGeometry(1.5, .04, 1.5), pad, .35, -.92, 1.25); loose.rotation.set(.12, .5, .05);
+      rbox(1.9, 1.8, 1.7, .08, white, .75, -.17, -.75);
+      const lab = canvasTex(512, 480, (x,w,h) => {
+        x.fillStyle = '#ffffff'; x.fillRect(0,0,w,h);
+        x.fillStyle = '#d9a521'; x.fillRect(30,24,150,34); x.fillRect(w-180,24,150,34);
+        x.fillStyle = '#fff'; x.font = F(700, 18); x.textAlign = 'center'; x.fillText('100% Cotton', 105, 48); x.fillText('Best Quality', w-105, 48);
+        euromed(x, w/2, 150, 78, '#b0123c');
+        x.fillStyle = '#d9a521'; x.fillRect(40,180,w-80,50); x.fillStyle = '#fff'; x.font = F(800, 30); x.fillText('GAUZE SWABS', w/2, 216);
+        x.fillStyle = '#223'; x.font = F(700, 26); x.fillText('10cm x 10cm - 12PLY', w/2, 280); x.fillText('100 PCS', w/2, 316);
+        x.font = F(600, 18); x.textAlign = 'left'; x.fillText('REF: EM-1967', 300, 370);
+        x.fillStyle = '#b0123c'; x.beginPath(); x.moveTo(0,h-70); x.quadraticCurveTo(w/2,h-120,w,h-70); x.lineTo(w,h); x.lineTo(0,h); x.fill();
+        x.fillStyle = '#d9a521'; x.fillRect(0,h-40,w,40);
+      });
+      plane(1.84, 1.72, lab, .75, -.17, .12);
+      g.rotation.set(.3, -.45, 0);
+      break;
+    }
+    case 'sachet': {
+      const boxLab = canvasTex(640, 400, (x,w,h) => {
+        x.fillStyle = '#fff'; x.fillRect(0,0,w,h);
+        euromed(x, 230, 90, 74, '#9b1b3a');
+        x.fillStyle = '#1d3f8f'; x.font = F(800, 40); x.textAlign = 'left'; x.fillText('Povidone-Iodine', 40, 160); x.fillText('Pre Pads', 40, 205);
+        x.fillStyle = '#d8231f'; x.fillRect(240,175,150,38); x.fillStyle = '#fff'; x.font = F(700, 24); x.fillText('Antiseptic', 252, 202);
+        x.fillStyle = '#9b1b3a'; x.beginPath(); x.arc(w-80, 80, 52, 0, 6.29); x.fill(); x.fillStyle = '#fff'; x.textAlign = 'center'; x.font = F(800, 30); x.fillText('100', w-80, 82); x.font = F(700, 14); x.fillText('SWABS', w-80, 104);
+        x.fillStyle = '#556'; x.font = F(600, 20); x.textAlign = 'left'; x.fillText('For External Use Only', 40, 250);
+        x.fillStyle = '#f2c21a'; x.beginPath(); x.moveTo(0,h-90); x.quadraticCurveTo(w*.6,h-150,w,h-110); x.lineTo(w,h); x.lineTo(0,h); x.fill();
+        x.fillStyle = '#9b1b3a'; x.beginPath(); x.moveTo(0,h-60); x.quadraticCurveTo(w*.6,h-120,w,h-80); x.lineTo(w,h); x.lineTo(0,h); x.fill();
+      });
+      rbox(2.6, 1.6, 1.4, .05, white, .2, .1, -.6);
+      plane(2.56, 1.56, boxLab, .2, .1, .14);
+      const sLab = canvasTex(400, 300, (x,w,h) => {
+        x.fillStyle = '#fafafa'; x.fillRect(0,0,w,h); x.strokeStyle = '#ddd'; x.lineWidth = 10; x.strokeRect(5,5,w-10,h-10);
+        euromed(x, 140, 70, 46, '#9b1b3a');
+        x.fillStyle = '#1d3f8f'; x.font = F(800, 26); x.textAlign = 'left'; x.fillText('Povidone-Iodine', 30, 120); x.fillText('Pre Pads', 30, 152);
+        x.fillStyle = '#f2c21a'; x.fillRect(0,h-70,w,24); x.fillStyle = '#9b1b3a'; x.fillRect(0,h-46,w,46);
+      });
+      const sg = new T.Group(); g.add(sg);
+      rbox(1.3, .98, .07, .06, white, 0, 0, 0, sg);
+      plane(1.26, .94, sLab, 0, 0, .06, sg);
+      sg.position.set(-.85, -.85, .75); sg.rotation.set(-1.05, 0, .25);
+      g.rotation.set(.18, .35, 0);
+      break;
+    }
+    case 'strip': case 'spot': {
+      const skin = plastic(0xe7b78d, {roughness:.7, clearcoat:.2}), padM = plastic(0xf3d2b3, {roughness:.9, clearcoat:0});
+      const dots = canvasTex(256, 96, (x,w,h) => { x.clearRect(0,0,w,h); x.fillStyle = 'rgba(120,70,40,.35)'; for (let i=6;i<w;i+=12) for (let j=6;j<h;j+=12) { x.beginPath(); x.arc(i,j,1.8,0,6.29); x.fill(); } });
+      if (model === 'strip') {
+        [[0,0,0,.18],[.2,-.15,-.09,-.5]].forEach(([x,y,z,rz]) => {
+          const s = new T.Group(); g.add(s);
+          rbox(2.7, .86, .04, .42, skin, 0,0,0, s);
+          rbox(.95, .64, .04, .1, padM, 0,0,.04, s);
+          plane(2.6, .8, dots, 0, 0, .035, s, {transparent:true, depthWrite:false});
+          s.position.set(x,y,z); s.rotation.z = rz;
+        });
+      } else {
+        [[-.5,.2,0],[.45,-.1,-.06],[0,-.6,.06]].forEach(([x,y,z]) => {
+          const d = mesh(new T.CylinderGeometry(.62, .62, .04, 64), skin, x, y, z); d.rotation.x = Math.PI/2;
+          const pd = mesh(new T.CylinderGeometry(.32, .32, .05, 48), padM, x, y, z+.03); pd.rotation.x = Math.PI/2;
+        });
+      }
+      g.rotation.set(-.55, .25, 0);
+      break;
+    }
+    case 'ivd': {
+      const boxLab = canvasTex(640, 420, (x,w,h) => {
+        x.fillStyle = '#fff'; x.fillRect(0,0,w,h);
+        x.fillStyle = '#c8a43a'; x.fillRect(0,160,w,54); x.fillStyle = '#d8231f'; x.fillRect(0,h-50,w,50);
+        euromed(x, w/2, 120, 84, '#c8102e');
+        x.fillStyle = '#fff'; x.font = F(800, 28); x.textAlign = 'center'; x.fillText('TRANSPARENT I.V. FIXATION DRESSING', w/2, 198);
+        x.fillStyle = '#334'; x.font = F(600, 22); x.textAlign = 'left'; ['• Transparent Dressing','• Waterproof','• Breathable','• Non-stick Pad'].forEach((t,i) => x.fillText(t, 300, 260 + i*30));
+        x.fillStyle = '#c8a43a'; x.beginPath(); x.arc(w-80, 90, 48, 0, 6.29); x.fill(); x.fillStyle = '#fff'; x.textAlign = 'center'; x.font = F(800, 34); x.fillText('50', w-80, 98);
+      });
+      rbox(2.5, 1.7, 1.3, .05, white, .55, .35, -.9);
+      plane(2.46, 1.66, boxLab, .55, .35, -.22);
+      const dg = new T.Group(); g.add(dg);
+      const frame = rshape(2.3, 1.8, .3); frame.holes.push(rshape(1.5, 1.05, .2));
+      mesh(new T.ExtrudeGeometry(frame, {depth:.02, bevelEnabled:false, curveSegments:12}), plastic(0xfbfbfb, {roughness:.85, clearcoat:0}), 0,0,0, dg);
+      rbox(2.3, 1.8, .012, .3, glass(0xffffff, .35), 0, 0, .025, dg);
+      mesh(new T.BoxGeometry(.22, .62, .03), plastic(0xeef2f5, {roughness:.9}), 0, -.62, .03, dg);
+      const ar = canvasTex(64, 256, (x,w,h) => { x.fillStyle = '#ffffff'; x.fillRect(0,0,w,h); x.fillStyle = '#2bb24c'; for (let y=20;y<h;y+=46){ x.beginPath(); x.moveTo(w/2,y); x.lineTo(w-10,y+24); x.lineTo(10,y+24); x.fill(); } });
+      plane(.3, 1.6, ar, 1.32, 0, .03, dg);
+      dg.position.set(-.55, -.55, .55); dg.rotation.set(-.35, .25, .08);
+      g.rotation.set(.15, .3, 0);
+      break;
+    }
+    case 'pad': {
+      const quilt = canvasTex(512, 360, (x,w,h) => { x.fillStyle = '#fbfdff'; x.fillRect(0,0,w,h); x.strokeStyle = 'rgba(80,140,220,.35)'; x.lineWidth = 3; for (let i=-h;i<w;i+=34){ x.beginPath(); x.moveTo(i,0); x.lineTo(i+h,h); x.stroke(); x.beginPath(); x.moveTo(i+h,0); x.lineTo(i,h); x.stroke(); } x.strokeStyle = '#3d8fe0'; x.lineWidth = 10; x.strokeRect(5,5,w-10,h-10); });
+      const layers = [];
+      [[0x2f7fe0,.05],[0x6fb3ff,.12],[0xcfe6ff,.06],[0xffffff,.05]].forEach(([c, t], i) => {
+        const L = new T.Group(); g.add(L);
+        const m = rbox(2.8, 1.9, t, .14, plastic(c, {roughness:.85, clearcoat:0}), 0,0,0, L); m.rotation.x = -Math.PI/2;
+        if (i === 3) { const q = plane(2.76, 1.86, quilt, 0, t/2+.012, 0, L); q.rotation.x = -Math.PI/2; }
+        layers.push(L);
+      });
+      const place = gap => layers.forEach((L,i) => L.position.y = (i - 1.5) * gap);
+      place(.32);
+      tick.push(tm => place(.14 + (Math.sin(tm*.0015) * .5 + .5) * .3));
+      g.rotation.set(.55, -.55, 0);
+      break;
+    }
+    case 'dsyr': {
+      const black = plastic(0x15181d, {roughness:.3, clearcoat:.9});
+      mesh(new T.CylinderGeometry(.18, .18, 2.5, 40), black);
+      const lab = canvasTex(160, 640, (x,w,h) => { const gr = x.createLinearGradient(0,0,0,h); gr.addColorStop(0,'#1a3a8f'); gr.addColorStop(1,'#0e1530'); x.fillStyle = gr; x.fillRect(0,0,w,h); x.save(); x.translate(w/2, h/2); x.rotate(-Math.PI/2); x.textAlign = 'center'; x.fillStyle = '#fff'; x.font = 'italic ' + F(800, 56); x.fillText('CALCIPLUS LC', 0, -6); x.fillStyle = '#9fc4ff'; x.font = F(600, 24); x.fillText('Light Cure Calcium Silicate Paste', 0, 40); x.restore(); });
+      mesh(new T.CylinderGeometry(.186, .186, 1.5, 40, 1, true, -1.3, 2.6), texMat(lab));
+      mesh(new T.CylinderGeometry(.075, .075, 1.1, 16), black, 0, 1.75, 0);
+      mesh(new T.CylinderGeometry(.3, .3, .07, 36), black, 0, 2.3, 0);
+      mesh(new T.BoxGeometry(.85, .07, .38), black, 0, 1.25, 0);
+      mesh(new T.CylinderGeometry(.06, .18, .3, 24), black, 0, -1.4, 0);
+      mesh(new T.CylinderGeometry(.06, .13, .42, 24), black, 0, -1.76, 0);
+      const tip = new T.CatmullRomCurve3([new T.Vector3(0,-1.95,0), new T.Vector3(0,-2.25,0), new T.Vector3(.08,-2.42,0), new T.Vector3(.3,-2.52,0)]);
+      mesh(new T.TubeGeometry(tip, 20, .022, 8), metal);
+      g.rotation.z = .6;
+      break;
+    }
+    case 'mband': {
+      const h = v.h || .5, cv = !!v.cv;
+      const band = mesh(new T.CylinderGeometry(cv ? .62 : .78, cv ? .86 : .78, h*1.6, 72, 1, true, .5, 5.4), metal, -.55, -.35, .55);
+      band.rotation.set(.35, 0, .1);
+      const caseLab = canvasTex(640, 420, (x,w,hh) => {
+        x.fillStyle = '#fff'; x.fillRect(0,0,w,hh);
+        x.strokeStyle = '#1b3f8f'; x.lineWidth = 4; x.strokeRect(40,40,190,56); x.fillStyle = '#1b3f8f'; x.font = F(800, 34); x.textAlign = 'left'; x.fillText('HYGENDO', 54, 80);
+        x.fillStyle = '#111'; x.font = F(600, 44); x.fillText('Matrix Bands', 290, 86);
+        const parts = (v.l || '').split(' ');
+        x.font = F(500, 26); x.fillStyle = '#333';
+        x.fillText('Thickness ' + (parts[3] || '0.038') + ' mm', 50, 160); x.fillText('Height ' + (parts[1] || '5') + ' mm', 50, 196);
+        x.fillText('REF ' + (v.code || ''), 50, 232); x.fillText('Contents: 50 units', 50, 268);
+        x.font = F(700, 28); x.fillText(cv ? 'Curved' : 'Straight', 440, 260);
+        x.fillStyle = '#1b3f8f'; x.beginPath(); x.moveTo(0,hh-110); x.quadraticCurveTo(w*.5,hh-30,w,hh-120); x.lineTo(w,hh); x.lineTo(0,hh); x.fill();
+      });
+      rbox(2.7, 1.8, .34, .12, glass(0xf4f8ff, .45), .35, .45, -.6);
+      plane(2.6, 1.7, caseLab, .35, .45, -.6);
+      g.rotation.set(.1, .35, 0);
+      break;
+    }
+    case 'retainer': {
+      const teal = plastic(new T.Color(colHex), {roughness:.3, clearcoat:.8});
+      mesh(lathe([[0,-1.7],[.2,-1.68],[.32,-1.5],[.38,-1],[.36,-.2],[.27,.5],[.19,.95],[.15,1.05],[0,1.05]]), teal);
+      mesh(new T.SphereGeometry(.22, 32, 20), metal, 0, 1.18, 0);
+      const arm = new T.CatmullRomCurve3([new T.Vector3(0,1.3,0), new T.Vector3(0,1.9,0), new T.Vector3(.05,2.2,0), new T.Vector3(.35,2.38,0), new T.Vector3(.6,2.4,0)]);
+      mesh(new T.TubeGeometry(arm, 30, .065, 12), metal);
+      const end = mesh(new T.CylinderGeometry(.09, .09, .22, 20), metal, .66, 2.4, 0); end.rotation.z = Math.PI/2;
+      g.rotation.set(0, .3, -.45);
+      break;
+    }
+    case 'tray': {
+      const tc = plastic(new T.Color(colHex), {roughness:.4});
+      const dk = plastic(new T.Color(colHex).multiplyScalar(.45), {roughness:.6});
+      const uBand = (r0, r1, leg) => { const s = new T.Shape(); s.moveTo(r1,-leg); s.lineTo(r1,0); s.absarc(0,0,r1,0,Math.PI,false); s.lineTo(-r1,-leg); s.lineTo(-r0,-leg); s.lineTo(-r0,0); s.absarc(0,0,r0,Math.PI,0,true); s.lineTo(r0,-leg); s.lineTo(r1,-leg); return s; };
+      const tg = new T.Group(); g.add(tg);
+      const ex = (s, d) => new T.ExtrudeGeometry(s, {depth:d, bevelEnabled:false, curveSegments:32});
+      mesh(ex(uBand(.48, 1.2, .75), .06), tc, 0,0,0, tg);
+      mesh(ex(uBand(1.13, 1.2, .75), .46), tc, 0,0,0, tg);
+      mesh(ex(uBand(.48, .55, .75), .34), tc, 0,0,0, tg);
+      for (let i=0;i<8;i++){ const a = .2 + i*.39; const hh = mesh(new T.CylinderGeometry(.065,.065,.02,16), dk, Math.cos(a)*.84, Math.sin(a)*.84, .065, tg); hh.rotation.x = Math.PI/2; }
+      [-.84,.84].forEach(x => [-.3,-.6].forEach(y => { const hh = mesh(new T.CylinderGeometry(.065,.065,.02,16), dk, x, y, .065, tg); hh.rotation.x = Math.PI/2; }));
+      for (let i=0;i<9;i++){ const a = .15 + i*.35; const sl = mesh(new T.BoxGeometry(.05,.03,.2), dk, Math.cos(a)*1.21, Math.sin(a)*1.21, .25, tg); sl.rotation.z = a; }
+      mesh(new T.BoxGeometry(.5, .9, .07), tc, 0, 1.55, .035, tg);
+      const hd = mesh(new T.CylinderGeometry(.3, .3, .07, 32), tc, 0, 2.0, .035, tg); hd.rotation.x = Math.PI/2;
+      const hl = mesh(new T.CylinderGeometry(.1, .1, .08, 20), dk, 0, 2.02, .04, tg); hl.rotation.x = Math.PI/2;
+      tg.rotation.x = -Math.PI/2;
+      g.rotation.set(.75, .5, 0);
+      break;
+    }
+    case 'syringe': {
+      mesh(new T.CylinderGeometry(.34,.34,2.6,48,1,true), glass());
+      mesh(new T.CylinderGeometry(.31,.31,1.5,40), plastic(col,{transparent:true,opacity:.75}), 0, -.5);
+      mesh(new T.CylinderGeometry(.32,.32,.22,40), plastic(0x1b2533), 0, .3);
+      mesh(new T.CylinderGeometry(.09,.09,1.7,16), white, 0, 1.25);
+      mesh(new T.CylinderGeometry(.38,.38,.08,40), white, 0, 2.1);
+      mesh(new T.BoxGeometry(1.25,.08,.55), white, 0, 1.3);
+      mesh(new T.CylinderGeometry(.08,.2,.3,24), white, 0, -1.45);
+      mesh(new T.CylinderGeometry(.15,.15,.3,24), plastic(col), 0, -1.72);
+      g.rotation.z = .55;
+      break;
+    }
+    case 'vial': {
+      mesh(lathe([[0,-1],[.58,-1],[.62,-.94],[.62,.5],[.56,.66],[.32,.82],[.32,1]]), glass());
+      mesh(new T.CylinderGeometry(.57,.57,1.1,48), plastic(col,{transparent:true,opacity:.55}), 0, -.42);
+      mesh(new T.CylinderGeometry(.38,.38,.32,48), metal, 0, 1.12);
+      mesh(new T.CylinderGeometry(.3,.3,.1,48), plastic(col), 0, 1.33);
+      mesh(new T.CylinderGeometry(.63,.63,.75,48,1,true), plastic(0xffffff,{side:T.DoubleSide}), 0, -.1);
+      g.rotation.z = .18;
+      break;
+    }
+    case 'capsule': {
+      const half = top => { const r = .55, h = .85, pts = [[r,0]]; for (let i=0;i<=16;i++){ const a = i/16*Math.PI/2; pts.push([Math.cos(a)*r, (top?1:-1)*(Math.sin(a)*r + h)]); } return top ? pts : pts.reverse(); };
+      mesh(lathe(half(true)), plastic(col)); mesh(lathe(half(false)), plastic(0xee5a24));
+      g.rotation.z = .9;
+      break;
+    }
+    case 'can': {
+      mesh(lathe([[0,-1.2],[.6,-1.2],[.62,-1.1],[.62,.75],[.45,1.05],[.15,1.12],[0,1.12]]), plastic(col,{metalness:.35}));
+      mesh(new T.CylinderGeometry(.635,.635,.9,48,1,true), plastic(0xffffff,{side:T.DoubleSide}), 0, -.35);
+      mesh(new T.CylinderGeometry(.32,.38,.55,40), white, 0, 1.35);
+      g.rotation.z = -.2;
+      break;
+    }
+  }
+  const box = new T.Box3().setFromObject(g), size = new T.Vector3(), ctr = new T.Vector3();
+  box.getSize(size); box.getCenter(ctr);
+  const wrap = new T.Group(); g.position.sub(ctr); wrap.add(g);
+  wrap.scale.setScalar(3.1 / Math.max(size.x, size.y, size.z) * (noK ? 1 : (v.k || 1)));
+  wrap.userData.tick = tm => tick.forEach(f => f(tm));
+  return wrap;
+}
+function disposeModel(m){ m.traverse(o => { if (o.geometry) o.geometry.dispose(); if (o.material) { if (o.material.map) o.material.map.dispose(); o.material.dispose(); } }); }
+function envFor(renderer){
+  const pm = new T.PMREMGenerator(renderer), es = new T.Scene();
+  es.add(new T.Mesh(new T.BoxGeometry(10,10,10), new T.MeshBasicMaterial({color:0x485466, side:T.BackSide})));
+  [[0,4.9,0,6,6,-Math.PI/2,0],[-4.9,1,1,3,6,0,Math.PI/2],[4.9,1,-1,3,6,0,-Math.PI/2],[0,1,4.9,4,3,0,Math.PI]].forEach(([x,y,z,w,h,rx,ry]) => { const m = new T.Mesh(new T.PlaneGeometry(w,h), new T.MeshBasicMaterial({color:0xcfd6df, side:T.DoubleSide})); m.position.set(x,y,z); m.rotation.set(rx,ry,0); es.add(m); });
+  const tex = pm.fromScene(es, .04).texture; pm.dispose(); return tex;
+}
+function lights(scene){
+  scene.add(new T.HemisphereLight(0xffffff, 0x9aa8bc, .55));
+  const k = new T.DirectionalLight(0xffffff, 1.1); k.position.set(3,5,4); scene.add(k);
+  const f = new T.DirectionalLight(0xffffff, .5); f.position.set(-4,1,3); scene.add(f);
+  const rim = new T.PointLight(0x6aa8ff, 1.1, 20); rim.position.set(-3,2,-4); scene.add(rim);
+  return rim;
+}
+
+let TR = null;
+function thumbFor(p, s = sel[p.id]){
+  const key = keyOf(p, s);
+  if (thumbs[key]) return thumbs[key];
+  if (!T) return 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="${colourOf(p,s)}"/></svg>`);
+  try {
+    if (!TR) {
+      const r = new T.WebGLRenderer({antialias:true, alpha:true, preserveDrawingBuffer:true});
+      r.setSize(360,360); r.setPixelRatio(1);
+      const sc = new T.Scene(); const rim = lights(sc); sc.environment = envFor(r);
+      const cam = new T.PerspectiveCamera(32,1,.1,50); cam.position.set(0,.4,7.4); cam.lookAt(0,0,0);
+      TR = {r, sc, cam, rim};
+    }
+    const m = buildModel(p, s, true); m.rotation.y = -.35; TR.sc.add(m);
+    TR.rim.color.set(colourOf(p, s));
+    TR.r.render(TR.sc, TR.cam);
+    thumbs[key] = TR.r.domElement.toDataURL('image/png');
+    TR.sc.remove(m); disposeModel(m);
+  } catch(e) { console.error(e); return ''; }
+  return thumbs[key];
+}
+
+let hero = null;
+function initHero(){
+  if (!T) { $('#viewer').insertAdjacentHTML('beforeend','<p style="position:absolute;inset:auto 0 45%;text-align:center;color:var(--muted)">The 3D viewer needs WebGL.</p>'); return; }
+  const canvas = $('#hero3d');
+  const r = new T.WebGLRenderer({canvas, antialias:true, alpha:true});
+  r.setPixelRatio(Math.min(devicePixelRatio,2));
+  const sc = new T.Scene(); const rim = lights(sc); sc.environment = envFor(r);
+  const cam = new T.PerspectiveCamera(32,1,.1,50); cam.position.set(0,.3,7.8);
+  const holder = new T.Group(); sc.add(holder);
+  const pg = new T.BufferGeometry(), N = 160, pos = new Float32Array(N*3);
+  for (let i=0;i<N;i++){ const a=Math.random()*6.28, rr=2+Math.random()*1.6; pos[i*3]=Math.cos(a)*rr; pos[i*3+1]=(Math.random()-.5)*3; pos[i*3+2]=Math.sin(a)*rr; }
+  pg.setAttribute('position', new T.BufferAttribute(pos,3));
+  const pts = new T.Points(pg, new T.PointsMaterial({color:0x1d5fd8, size:.035, transparent:true, opacity:.55}));
+  sc.add(pts);
+  const size = () => { const w = canvas.clientWidth, h = canvas.clientHeight; if (!w) return; r.setSize(w,h,false); cam.aspect = w/h; cam.updateProjectionMatrix(); };
+  size(); addEventListener('resize', size);
+  hero = {r, sc, cam, holder, rim, pts, model:null, next:null, scale:0, target:1, rotY:-.3, vel:.006, drag:false, tiltX:0, scrollSpin:0};
+  const v = $('#viewer'); let lx = 0, ly = 0;
+  v.addEventListener('pointerdown', e => { hero.drag = true; lx = e.clientX; ly = e.clientY; v.classList.add('drag'); try { v.setPointerCapture(e.pointerId); } catch(_){} });
+  v.addEventListener('pointermove', e => {
+    if (!hero.drag) return;
+    hero.vel = (e.clientX - lx) * .012; hero.rotY += hero.vel;
+    hero.tiltX = Math.max(-.6, Math.min(.6, hero.tiltX + (e.clientY - ly) * .006));
+    lx = e.clientX; ly = e.clientY;
+  });
+  const up = () => { hero.drag = false; v.classList.remove('drag'); };
+  v.addEventListener('pointerup', up); v.addEventListener('pointercancel', up);
+  (function loop(t){
+    const h = hero; t = t || 0;
+    if (!h.drag) { h.vel += ((reduce ? 0 : .006) - h.vel) * .03; h.rotY += h.vel; h.tiltX *= .96; }
+    if (h.next && h.scale < .04) {
+      if (h.model) { h.holder.remove(h.model); disposeModel(h.model); }
+      h.model = buildModel(h.next.p, h.next.s); h.holder.add(h.model); h.rim.color.set(colourOf(h.next.p, h.next.s)); h.next = null; h.target = 1; h.vel = .12;
+    }
+    h.scale += (h.target - h.scale) * (reduce ? 1 : .14);
+    h.holder.scale.setScalar(Math.max(.001, h.scale));
+    h.holder.rotation.set(h.tiltX, h.rotY + h.scrollSpin, 0);
+    h.holder.position.y = reduce ? 0 : Math.sin(t/900) * .08;
+    if (h.model && !reduce) h.model.userData.tick(t);
+    h.pts.rotation.y -= .0015;
+    h.r.render(h.sc, h.cam);
+    requestAnimationFrame(loop);
+  })();
+}
+function show3D(p){
+  if (!hero) return;
+  const s = sel[p.id].slice();
+  if (hero.model) { hero.next = {p, s}; hero.target = 0; }
+  else { hero.model = buildModel(p, s); hero.holder.add(hero.model); hero.rim.color.set(colourOf(p, s)); }
+}
+
+/* ================= HERO CONFIGURATOR ================= */
+function showProduct(p){
+  curProd = p;
+  show3D(p);
+  $('#vName').textContent = p.n;
+  $('#vSpec').textContent = [varLabel(p), codeOf(p)].filter(Boolean).join(' · ') || p.s;
+  p.sp.forEach(([k,v], i) => {
+    const h = $('#hot'+i); h.classList.add('out');
+    setTimeout(() => { h.querySelector('span').textContent = k; h.querySelector('b').textContent = v; h.classList.remove('out'); }, reduce ? 0 : 260 + i*110);
+  });
+  renderConfig();
+  $$('#pchips button').forEach(b => b.setAttribute('aria-pressed', b.dataset.id === p.id));
+}
+function optHTML(p, scope){
+  return (p.opts || []).map((o, oi) => {
+    const isCol = o.vals.every(x => x.c);
+    const curV = o.vals[sel[p.id][oi]];
+    const btns = o.vals.map((x, vi) => isCol
+      ? `<button class="sw" style="background:${x.c}" aria-label="${x.l}" title="${x.l}${x.code ? ' · ' + x.code : ''}" aria-pressed="${vi === sel[p.id][oi]}" data-p="${p.id}" data-o="${oi}" data-v="${vi}"></button>`
+      : `<button class="chip" aria-pressed="${vi === sel[p.id][oi]}" data-p="${p.id}" data-o="${oi}" data-v="${vi}">${x.l}</button>`).join('');
+    if (scope === 'card') return (isCol || o.vals.length <= 3) ? `<div class="swrow">${btns}</div>` : '';
+    return `<div class="opt"><span>${o.name}: <b>${curV.l}</b></span><div class="vals">${btns}</div></div>`;
+  }).join('');
+}
+function renderConfig(){
+  const p = curProd;
+  $('#cfgBrand').innerHTML = p.sample ? '<span class="sample">Sample product</span>' : p.brand;
+  $('#cfgName').textContent = p.n;
+  const code = codeOf(p);
+  $('#cfgCode').innerHTML = code ? `<i>Item code</i> ${code}` : `<i>Item code</i> to confirm`;
+  $('#cfgOpts').innerHTML = optHTML(p, 'hero') || `<div class="opt"><span>${p.s}</span></div>`;
+  $('#cfgSheet').hidden = !!p.sample;
+}
+function pickOption(pid, oi, vi){
+  const p = byId[pid];
+  sel[pid][oi] = vi;
+  if (curProd && curProd.id === pid) showProduct(p);
+  const card = $(`.pcard[data-id="${pid}"]`);
+  if (card) renderCard(card, p);
+  const chip = $(`#pchips button[data-id="${pid}"] img`); if (chip) chip.src = thumbFor(p);
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-p][data-o]');
+  if (b) pickOption(b.dataset.p, +b.dataset.o, +b.dataset.v);
+});
+
+/* ================= DIVISION / CATALOGUE ================= */
+function renderDivision(anim){
+  const D = DIV[cur];
+  $('#hEye').textContent = D.label + ' division';
+  $('#hTitle').innerHTML = D.title; $('#hSub').textContent = D.sub;
+  $('#catEye').textContent = 'Catalogue · ' + D.label;
+  if (anim && !reduce) ['#hEye','#hTitle','#hSub','#config'].forEach((s,i) => { const el = $(s); el.classList.remove('swap-in'); void el.offsetWidth; el.style.animationDelay = i*80+'ms'; el.classList.add('swap-in'); });
+  if (hero) hero.pts.material.color.set(D.acc);
+  const list = P.filter(p => p.d === cur);
+  $('#pchips').innerHTML = list.map(p => `<button data-id="${p.id}" aria-label="${p.n}" title="${p.n}" aria-pressed="false"><img src="${thumbFor(p)}" alt=""></button>`).join('');
+  $('#catFilter').value = ''; brandF = 'All';
+  renderBrands(); renderGrid();
+  showProduct(list[0]);
+  movePill();
+}
+function renderBrands(){
+  const list = P.filter(p => p.d === cur);
+  const brands = ['All', ...new Set(list.map(p => p.brand))];
+  $('#brands').innerHTML = brands.map(b => `<button data-brand="${b}" aria-pressed="${b === brandF}">${b}<small>${b === 'All' ? list.length : list.filter(p => p.brand === b).length}</small></button>`).join('');
+  placeBadges();
+}
+$('#brands').addEventListener('click', e => { const b = e.target.closest('[data-brand]'); if (!b) return; brandF = b.dataset.brand; renderBrands(); renderGrid(); });
+const hay = p => (p.n + ' ' + p.s + ' ' + p.brand + ' ' + (p.code || '') + ' ' + (p.opts || []).flatMap(o => o.vals.map(v => v.l + ' ' + (v.code || ''))).join(' ')).toLowerCase();
+function renderGrid(){
+  const q = $('#catFilter').value.trim().toLowerCase();
+  const list = P.filter(p => p.d === cur && (brandF === 'All' || p.brand === brandF) && (!q || hay(p).includes(q)));
+  $('#pgrid').innerHTML = list.length ? list.map(p => `<article class="pcard" data-id="${p.id}"></article>`).join('')
+    : `<div class="empty">Nothing here matches “${q}”. Try the search in the top bar to look across all divisions.</div>`;
+  $$('.pcard').forEach(c => renderCard(c, byId[c.dataset.id]));
+  bindTilt(); placeBadges();
+}
+function renderCard(card, p){
+  const code = codeOf(p);
+  card.style.setProperty('--c', colourOf(p));
+  card.innerHTML = `
+    <button class="thumb" data-view="${p.id}" aria-label="View ${p.n} in 3D"><img src="${thumbFor(p)}" alt="${p.n}${varLabel(p) ? ', ' + varLabel(p) : ''}">${p.sample ? '<span class="sample">Sample</span>' : ''}<span class="qv">View in 3D</span></button>
+    <div class="pinfo"><span class="pbrand">${p.sample ? 'Sample' : p.brand}</span><h3>${p.n}</h3><p>${(p.opts && varLabel(p)) || p.s}</p></div>
+    ${optHTML(p, 'card')}
+    <div class="prow"><span class="mono">${code || (p.sample ? '' : '—')}</span>
+      <span class="pbtns">${p.sample ? '' : `<button class="mini" data-sheet="${p.id}" aria-label="Spec sheet for ${p.n}">Specs</button>`}<button class="add" data-add="${p.id}">+ Quote</button></span></div>`;
+}
+function bindTilt(){
+  $$('.pcard').forEach(c => {
+    c.onpointermove = e => {
+      if (e.pointerType === 'touch') return;
+      const r = c.getBoundingClientRect(), x = (e.clientX - r.left)/r.width, y = (e.clientY - r.top)/r.height;
+      c.classList.add('live');
+      c.style.setProperty('--ry', (x-.5)*12+'deg'); c.style.setProperty('--rx', (.5-y)*12+'deg');
+      c.style.setProperty('--mx', x*100+'%'); c.style.setProperty('--my', y*100+'%');
+    };
+    c.onpointerleave = () => { c.classList.remove('live'); c.style.setProperty('--rx','0deg'); c.style.setProperty('--ry','0deg'); };
+  });
+}
+function movePill(){
+  const b = $(`#divs button[data-div="${cur}"]`), pill = $('#pill');
+  $$('#divs button').forEach(x => x.setAttribute('aria-selected', x === b));
+  pill.style.width = b.offsetWidth + 'px';
+  pill.style.transform = `translateX(${b.offsetLeft - 4}px)`;
+}
+addEventListener('resize', movePill);
+
+function setDivision(d, ev, then){
+  if (d === cur) { then && then(); return; }
+  const go = () => { cur = d; document.body.dataset.div = d; renderDivision(true); then && then(); };
+  if (reduce || !Element.prototype.animate) { go(); return; }
+  const w = $('#wipe'), D = DIV[d];
+  const x = ev && ev.clientX ? ev.clientX : innerWidth/2, y = ev && ev.clientY ? ev.clientY : 60;
+  const R = Math.hypot(Math.max(x, innerWidth-x), Math.max(y, innerHeight-y));
+  w.style.background = `linear-gradient(130deg, ${D.acc}, ${D.acc2})`;
+  w.hidden = false;
+  w.animate([{clipPath:`circle(0px at ${x}px ${y}px)`},{clipPath:`circle(${R}px at ${x}px ${y}px)`}],{duration:520,easing:'cubic-bezier(.7,0,.3,1)',fill:'forwards'})
+   .finished.then(() => {
+     go();
+     $('#main').animate([{transform:'perspective(1600px) rotateY(-16deg) translateZ(-160px) scale(.94)',filter:'blur(8px)'},{transform:'none',filter:'none'}],{duration:800,easing:'cubic-bezier(.2,.8,.2,1)'});
+     return w.animate([{clipPath:`circle(${R}px at ${innerWidth-x}px ${innerHeight-y}px)`},{clipPath:`circle(0px at ${innerWidth-x}px ${innerHeight-y}px)`}],{duration:620,easing:'cubic-bezier(.7,0,.3,1)',fill:'forwards'}).finished;
+   }).then(() => { w.hidden = true; w.getAnimations().forEach(a => a.cancel()); });
+}
+$('#divs').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setDivision(b.dataset.div, e); });
+
+/* ================= QUOTE ================= */
+const save = () => { try { localStorage.setItem('am-quote-v2', JSON.stringify(quote)); } catch(e) {} };
+function addToQuote(id, fromEl, s){
+  const p = byId[id]; s = (s && s.length ? s : sel[id]).slice();
+  const key = keyOf(p, s);
+  const it = quote.find(q => q.key === key);
+  if (it) it.qty++; else quote.push({key, id, s, qty:1});
+  save(); fly(fromEl, thumbFor(p, s)); renderQuote();
+  toast(`${p.n}${varLabel(p, s) ? ' · ' + varLabel(p, s) : ''} added`);
+}
+function fly(fromEl, src){
+  const btn = $('#openQuote');
+  const bump = () => { btn.classList.remove('bump'); void btn.offsetWidth; btn.classList.add('bump'); };
+  if (!fromEl || reduce || !Element.prototype.animate) { bump(); return; }
+  const a = fromEl.getBoundingClientRect(), b = btn.getBoundingClientRect();
+  const img = document.createElement('img'); img.src = src; img.className = 'flyer';
+  const s = Math.min(a.width, a.height, 200);
+  Object.assign(img.style, {left:a.left + a.width/2 - s/2 + 'px', top:a.top + a.height/2 - s/2 + 'px', width:s+'px', height:s+'px'});
+  document.body.appendChild(img);
+  const dx = b.left + b.width/2 - (a.left + a.width/2), dy = b.top + b.height/2 - (a.top + a.height/2);
+  img.animate([
+    {transform:'translate(0,0) scale(1) rotate(0)', opacity:1},
+    {transform:`translate(${dx*.5}px, ${dy*.5 - 120}px) scale(.6) rotate(-90deg)`, opacity:1, offset:.55},
+    {transform:`translate(${dx}px, ${dy}px) scale(.12) rotate(-200deg)`, opacity:.4}
+  ], {duration:850, easing:'cubic-bezier(.5,0,.3,1)'}).finished.then(() => { img.remove(); bump(); });
+}
+const quoteText = () => 'Apple Med quote request\n' + quote.map(q => { const p = byId[q.id]; const c = codeOf(p, q.s); return `• ${p.n}${varLabel(p, q.s) ? ' (' + varLabel(p, q.s) + ')' : ''}${c ? ' [' + c + ']' : ''} × ${q.qty}`; }).join('\n');
+function renderQuote(){
+  $('#qcount').textContent = quote.reduce((s,q) => s + q.qty, 0);
+  $('#qlist').innerHTML = quote.length ? quote.map(q => { const p = byId[q.id]; const c = codeOf(p, q.s); return `
+    <div class="qi"><img src="${thumbFor(p, q.s)}" alt=""><div><b>${p.n}</b><small>${varLabel(p, q.s) || p.s}</small><small class="mono">${c}</small></div>
+      <div class="qty"><button data-dec="${q.key}" aria-label="Decrease">−</button><span>${q.qty}</span><button data-inc="${q.key}" aria-label="Increase">+</button></div></div>`; }).join('')
+    : `<div class="empty">Your quote is empty. Add products from the catalogue or ask the AI assistant.</div>`;
+  $('#qfoot').innerHTML = quote.length ? `
+    <a class="btn wa" href="https://wa.me/${WA}?text=${encodeURIComponent(quoteText())}" target="_blank" rel="noopener">Send on WhatsApp</a>
+    <button class="btn ghost" id="copyQ">Copy quote text</button>
+    <small>Goes to +971 50 281 7024 · sales@applemed.ae</small>` : '';
+}
+$('#qlist').addEventListener('click', e => {
+  const inc = e.target.dataset.inc, dec = e.target.dataset.dec;
+  if (inc) quote.find(q => q.key === inc).qty++;
+  if (dec) { const it = quote.find(q => q.key === dec); it.qty--; if (it.qty < 1) quote = quote.filter(q => q !== it); }
+  if (inc || dec) { save(); renderQuote(); }
+});
+$('#qfoot').addEventListener('click', e => {
+  if (e.target.id === 'copyQ') navigator.clipboard?.writeText(quoteText()).then(() => toast('Quote copied'), () => toast('Copy is blocked here. Use Send on WhatsApp instead.'));
+});
+document.addEventListener('click', e => {
+  const c = e.target.closest('[data-copy]'); if (!c) return; e.preventDefault();
+  navigator.clipboard?.writeText(c.dataset.copy).then(() => toast('Copied ' + c.dataset.copy), () => toast('Copy is blocked here. Select the text instead.'));
+});
+
+/* ================= SPEC SHEET ================= */
+function openSheet(p){
+  if (p.sample) return;
+  $('#shTitle').textContent = p.n;
+  const rows = p.specs.map(([k,v]) => `<tr><th scope="row">${k}</th><td>${v}</td></tr>`).join('');
+  let codes = '';
+  const o = (p.opts || []).find(o => o.vals.some(v => v.code));
+  if (o) {
+    const oi = p.opts.indexOf(o);
+    codes = `<div class="tblwrap"><table class="tbl"><thead><tr><th>${o.name}</th><th>Item code</th><th></th></tr></thead><tbody>${o.vals.map((v, vi) => `<tr><td>${v.c ? `<span class="dot" style="background:${v.c}"></span>` : ''}${v.l}</td><td class="mono">${v.code}</td><td><button class="add" data-addv="${p.id}" data-oi="${oi}" data-vi="${vi}">+ Quote</button></td></tr>`).join('')}</tbody></table></div>`;
+  } else if (p.code) codes = `<span class="code"><i>Item code</i> ${p.code}</span>`;
+  else codes = `<span class="code"><i>Item code</i> to confirm</span>`;
+  $('#shBody').innerHTML = `
+    <figure class="broch">${p.img ? `<img src="img/${p.img}.jpg" alt="${p.n} brochure" id="brochImg"><figcaption>Original brochure · click to enlarge</figcaption>` : '<div class="noimg">No brochure yet</div>'}</figure>
+    <div class="sheet-info">
+      <span class="cfg-brand">${p.brand}</span>
+      <p>${p.desc}</p>
+      ${codes}
+      <div class="tblwrap"><table class="tbl"><tbody>${rows}</tbody></table></div>
+      <div class="cta"><button class="btn primary" data-addcur="${p.id}">Add current selection</button><button class="btn ghost" data-view3d="${p.id}">View in 3D</button></div>
+    </div>`;
+  $('#sheet').classList.remove('zoom');
+  openPanel('sheet');
+}
+$('#shBody').addEventListener('click', e => {
+  if (e.target.id === 'brochImg') { $('#sheet').classList.toggle('zoom'); return; }
+  const av = e.target.closest('[data-addv]');
+  if (av) { const p = byId[av.dataset.addv]; const s = sel[p.id].slice(); s[+av.dataset.oi] = +av.dataset.vi; addToQuote(p.id, av, s); }
+  const ac = e.target.closest('[data-addcur]'); if (ac) addToQuote(ac.dataset.addcur, ac);
+  const v3 = e.target.closest('[data-view3d]');
+  if (v3) { const p = byId[v3.dataset.view3d]; closeAll(); setDivision(p.d, null, () => { showProduct(p); $('#top').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); }); }
+});
+
+/* ================= PANELS ================= */
+const scrim = $('#scrim');
+function openPanel(id){
+  closeAll();
+  const p = $('#'+id);
+  if (id === 'drawer') { p.classList.add('open'); scrim.classList.add('on'); return; }
+  p.hidden = false; if (id === 'cmd' || id === 'sheet') scrim.classList.add('on');
+  const pre = id === 'cmd' ? 'translateX(-50%) ' : id === 'sheet' ? 'translate(-50%,-50%) ' : '';
+  if (!reduce) p.animate([{transform: pre + 'perspective(900px) rotateX(-16deg) translateY(24px) scale(.94)', opacity:0},{transform: pre + 'perspective(900px)', opacity:1}],{duration:440,easing:'cubic-bezier(.2,.8,.2,1)'});
+}
+function closeAll(){ ['guideP','chat','cmd','sheet'].forEach(i => $('#'+i).hidden = true); $('#drawer').classList.remove('open'); scrim.classList.remove('on'); }
+document.addEventListener('click', e => { if (e.target.closest('[data-close]')) closeAll(); });
+scrim.addEventListener('click', closeAll);
+$('#openQuote').onclick = () => openPanel('drawer');
+$('#guideFab').onclick = () => $('#guideP').hidden ? openPanel('guideP') : closeAll();
+$('#bannerGuide').onclick = () => openPanel('guideP');
+$('#aiFab').onclick = () => { $('#chat').hidden ? (openPanel('chat'), setTimeout(() => $('#chatIn').focus(), 50)) : closeAll(); };
+$('#heroAsk').onclick = () => { openPanel('chat'); setTimeout(() => $('#chatIn').focus(), 50); };
+$('#cfgAdd').onclick = () => curProd && addToQuote(curProd.id, $('#viewer'));
+$('#cfgSheet').onclick = () => curProd && openSheet(curProd);
+addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openCmd(); }
+  if (e.key === 'Escape') closeAll();
+});
+$('#pgrid').addEventListener('click', e => {
+  const add = e.target.closest('[data-add]'), view = e.target.closest('[data-view]'), sh = e.target.closest('[data-sheet]');
+  if (add) addToQuote(add.dataset.add, add.closest('.pcard').querySelector('.thumb'));
+  if (sh) openSheet(byId[sh.dataset.sheet]);
+  if (view) { showProduct(byId[view.dataset.view]); $('#top').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); }
+});
+$('#pchips').addEventListener('click', e => { const b = e.target.closest('button'); if (b) showProduct(byId[b.dataset.id]); });
+$('#catFilter').addEventListener('input', renderGrid);
+
+let cs = 0, results = [];
+function openCmd(){ openPanel('cmd'); $('#cmdIn').value = ''; runCmd(); setTimeout(() => $('#cmdIn').focus(), 30); }
+function runCmd(){
+  const q = $('#cmdIn').value.trim().toLowerCase().replace(/\s+/g,' ');
+  const qc = q.replace(/[-\s]/g,'');
+  results = [];
+  P.forEach(p => {
+    if (!q) { results.push({p}); return; }
+    let hit = false;
+    if (p.code && p.code.toLowerCase().replace('-','').includes(qc) && qc.length > 1) { results.push({p}); return; }
+    (p.opts || []).forEach((o, oi) => o.vals.forEach((v, vi) => {
+      if (v.code && qc.length > 1 && v.code.toLowerCase().replace('-','').includes(qc)) { const s = sel[p.id].slice(); s[oi] = vi; results.push({p, s, v}); hit = true; }
+    }));
+    if (!hit && (hay(p).includes(q) || DIV[p.d].label.toLowerCase().includes(q))) results.push({p});
+  });
+  results = results.slice(0, 10); cs = 0; drawCmd();
+}
+function drawCmd(){
+  $('#cmdList').innerHTML = results.length ? results.map((r,i) => { const s = r.s || sel[r.p.id]; const code = codeOf(r.p, s); return `<li><button data-i="${i}" class="${i===cs?'act':''}"><img src="${thumbFor(r.p, s)}" alt=""><span><b>${r.p.n}</b><br><small>${r.v ? r.v.l : r.p.s}${code ? ' · ' + code : ''}</small></span><em>${DIV[r.p.d].label}</em></button></li>`; }).join('')
+    : `<li class="empty">No product or code matches that. Try “sharps”, “EM-3245” or ask the AI assistant.</li>`;
+}
+function pick(r, ev){
+  if (r.s) sel[r.p.id] = r.s.slice();
+  closeAll();
+  setDivision(r.p.d, ev, () => { renderGrid(); showProduct(r.p); $('#top').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); });
+}
+$('#openCmd').onclick = openCmd;
+$('#cmdIn').addEventListener('input', runCmd);
+$('#cmdIn').addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown') { cs = Math.min(results.length-1, cs+1); drawCmd(); e.preventDefault(); }
+  if (e.key === 'ArrowUp') { cs = Math.max(0, cs-1); drawCmd(); e.preventDefault(); }
+  if (e.key === 'Enter' && results[cs]) pick(results[cs]);
+});
+$('#cmdList').addEventListener('click', e => { const b = e.target.closest('button'); if (b) pick(results[+b.dataset.i], e); });
+
+/* ================= AI ASSISTANT (scripted demo) ================= */
+function findCode(t){
+  const m = t.match(/\b(em|tp)\s?-?\s?(\d{4,5})\b/i); if (!m) return null;
+  const code = (m[1] + '-' + m[2]).toUpperCase();
+  for (const p of P) {
+    if (p.code === code) return {p, s:sel[p.id].slice(), code};
+    for (const [oi,o] of (p.opts || []).entries()) for (const [vi,v] of o.vals.entries()) if (v.code === code) { const s = sel[p.id].slice(); s[oi] = vi; return {p, s, code}; }
+  }
+  return {code};
+}
+function botReply(q){
+  const t = q.toLowerCase();
+  const fc = findCode(q);
+  if (fc) return fc.p ? {text:`${fc.code} is the ${fc.p.n}${varLabel(fc.p, fc.s) ? ', ' + varLabel(fc.p, fc.s) : ''}.`, items:[[fc.p.id, fc.s]]} : {text:`I could not find ${fc.code} in this catalogue. Check the code or send it to sales on WhatsApp.`};
+  const em = EMIRATES.find(x => t.includes(x.n.toLowerCase()) || (x.n === 'Ras Al Khaimah' && /\brak\b/.test(t)) || (x.n === 'Umm Al Quwain' && /\buaq\b/.test(t)));
+  if (em) return {text:`Delivery to ${em.n}: ${em.eta.toLowerCase()}. ${em.cut} for the fastest run. (Sample times for this concept.)`};
+  const sz = t.match(/(\d{1,2})\s?(l|litre|liter)\b/);
+  if (/sharp|needle disposal|biohazard/.test(t)) { const p = byId.sharps; let i = -1; if (sz) i = p.opts[0].vals.findIndex(v => v.l === sz[1] + ' L'); return i >= 0 ? {text:`Here is the ${p.opts[0].vals[i].l} sharps container:`, items:[['sharps',[i]]]} : {text:'Sharps containers come in 1, 3, 5, 10 and 13 litres:', items:[['sharps',[0]],['sharps',[2]],['sharps',[3]]]}; }
+  if (/matrix|retainer|class ii/.test(t)) return {text:'Hygendo matrix bands come straight or curved, 5 or 6.3 mm. The retainer pairs with them.', items:[['mband',[0]],['mband',[2]],['retainer',[]]]};
+  if (/id band|wrist|identification|patient band/.test(t)) return {text:'Patient ID bands come in five adult colours plus paediatric blue and pink:', items:[['idband',[0]],['idband',[4]],['idband',[5]]]};
+  if (/eurowrap|cohesive|elastic|self.?adher/.test(t)) return {text:'Eurowrap comes in 5, 7.5 and 10 cm and 11 colours:', items:[['eurowrap',[0,0]],['eurowrap',[1,2]]]};
+  if (/plaster|strip|spot|band.?aid/.test(t)) return {text:'Strip and spot bandages, 100 per pack:', items:[['bandages',[0]],['bandages',[1]]]};
+  if (/iodine|povidone|antiseptic|prep/.test(t)) return {text:'Povidone-iodine pre pads, 100 per box:', items:[['povidone',[]]]};
+  if (/gauze|swab/.test(t)) return {text:'Euromed gauze swabs, 10 × 10 cm, 12-ply, 100 pcs:', items:[['gauze',[]]]};
+  if (/hme|ventilat|anaesth|anesth|filter/.test(t)) return {text:'The Euromed HME filter suits tidal volumes of 150 to 1500 mL:', items:[['hme',[]]]};
+  if (/lung|spiromet|breath/.test(t)) return {text:'The Bio-Med 3-ball lung exerciser:', items:[['lungex',[]]]};
+  if (/dressing|\biv\b|cannula|catheter/.test(t)) return {text:'Transparent IV fixation dressing, 6 × 8 cm, 50 per box:', items:[['ivd',[]]]};
+  if (/under ?pad|incontin|\bbed\b/.test(t)) return {text:'Premium under pads, 60 × 90 cm, 15 per pack:', items:[['underpads',[]]]};
+  if (/calciplus|pulp|liner|calcium/.test(t)) return {text:'Calciplus LC, light-cure calcium silicate liner, 2 g syringe:', items:[['calciplus',[]]]};
+  if (/tray|impression/.test(t)) return {text:'Paediatric impression trays in two sizes:', items:[['trays',[0]],['trays',[1]]]};
+  if (/dental|dentist/.test(t)) return {text:'Dental range on this page:', items:[['calciplus',[]],['mband',[0]],['trays',[0]]]};
+  if (/vet|dog|cat|animal/.test(t)) return {text:'The veterinary range still shows sample items. Ask sales on WhatsApp for current stock.'};
+  if (/glove|mask|syringe/.test(t)) return {text:'That item is not in this demo catalogue yet. Send the brochure and it can be added in 3D.'};
+  if (/deliver|ship|eta|how long/.test(t)) return {text:'Sharjah, Ajman, Dubai and Umm Al Quwain usually get same-day delivery. Ras Al Khaimah and Fujairah next morning, Abu Dhabi next day. (Sample times.)'};
+  if (/price|cost|quote|discount/.test(t)) return {text:'Pricing depends on volume. Add items to your quote and tap Send on WhatsApp. The sales team replies with prices.'};
+  if (/job|career|hiring|vacanc|work/.test(t)) { setTimeout(() => $('#careers').scrollIntoView({behavior:'smooth'}), 900); return {text:'Yes. Scrolling you to the careers section.'}; }
+  if (/contact|phone|email|whatsapp/.test(t)) return {text:'WhatsApp +971 50 281 7024 · sales@applemed.ae · www.applemed.ae'};
+  return {text:'I can find products by name or item code, check delivery, or build your quote. Try “sharps 10 L” or “EM-3245”.'};
+}
+function say(text, who, items){
+  const m = document.createElement('div'); m.className = 'm ' + who; m.textContent = text;
+  if (items) {
+    const s = document.createElement('div'); s.className = 'sugg';
+    s.innerHTML = items.map(([id, sv]) => { const p = byId[id]; const ss = (sv && sv.length ? sv : sel[id]); return `<button data-chatadd="${id}" data-s="${ss.join('-')}"><img src="${thumbFor(p, ss)}" alt=""><span>${p.n}<br><small>${varLabel(p, ss) || p.s}</small></span><b>+ Quote</b></button>`; }).join('');
+    m.appendChild(s);
+  }
+  $('#msgs').appendChild(m); $('#msgs').scrollTop = 1e6;
+}
+function ask(q){
+  if (!q.trim()) return;
+  say(q, 'me');
+  const ty = document.createElement('div'); ty.className = 'm bot typing'; ty.innerHTML = '<span></span><span></span><span></span>';
+  $('#msgs').appendChild(ty); $('#msgs').scrollTop = 1e6;
+  setTimeout(() => { ty.remove(); const r = botReply(q); say(r.text, 'bot', r.items); }, reduce ? 0 : 750);
+}
+$('#chatForm').addEventListener('submit', e => { e.preventDefault(); ask($('#chatIn').value); $('#chatIn').value = ''; });
+$('#chatChips').addEventListener('click', e => { if (e.target.tagName === 'BUTTON') ask(e.target.textContent); });
+$('#msgs').addEventListener('click', e => { const b = e.target.closest('[data-chatadd]'); if (b) addToQuote(b.dataset.chatadd, b, b.dataset.s ? b.dataset.s.split('-').filter(x => x !== '').map(Number) : []); });
+
+/* ================= MAP ================= */
+function drawMap(){
+  const hub = EMIRATES[0];
+  const land = 'M18,226 C60,214 96,206 132,190 C168,172 196,152 214,136 C236,118 252,100 268,86 C286,70 300,52 312,34 L326,22 C334,30 338,46 342,62 C348,78 362,84 384,92 C390,110 388,130 380,146 C366,160 344,166 330,182 C318,200 304,222 292,244 L40,248 Z';
+  let s = `<svg viewBox="0 0 400 260" role="img" aria-label="Schematic map of UAE delivery routes"><path class="land" d="${land}"/>`;
+  EMIRATES.slice(1).forEach((e,i) => { const mx = (hub.x + e.x)/2, my = (hub.y + e.y)/2 - 24; s += `<path class="route" data-r="${i+1}" d="M${hub.x},${hub.y} Q${mx},${my} ${e.x},${e.y}"/>`; });
+  EMIRATES.forEach((e,i) => {
+    const lx = e.x > 340 ? -8 : 10, anchor = e.x > 340 ? 'end' : 'start';
+    s += `<g class="node" data-i="${i}" tabindex="0" role="button" aria-label="${e.n}"><circle class="ping" cx="${e.x}" cy="${e.y}" r="6"/><circle class="dot" cx="${e.x}" cy="${e.y}" r="${e.hub?8:6}"/><text x="${e.x+lx}" y="${e.y-10}" text-anchor="${anchor}">${e.n}${e.hub?' · hub':''}</text></g>`;
+  });
+  $('#map').innerHTML = s + '</svg>';
+  const selectE = i => {
+    const e = EMIRATES[i];
+    $$('.node').forEach(n => n.classList.toggle('on', +n.dataset.i === i));
+    $$('.route').forEach(r => r.classList.toggle('on', +r.dataset.r === i));
+    $('#covCard').innerHTML = `<span class="eyebrow">Delivery to</span><h3>${e.n}</h3>
+      <dl><dt>Arrives</dt><dd>${e.eta}</dd><dt>Cut-off</dt><dd>${e.cut}</dd><dt>Van runs</dt><dd>${e.van}</dd></dl>
+      <span class="note">Sample delivery times for the concept.</span>`;
+    if (!reduce) $('#covCard').animate([{transform:'perspective(900px) rotateY(25deg)',opacity:.3},{transform:'none',opacity:1}],{duration:550,easing:'cubic-bezier(.2,.8,.2,1)'});
+  };
+  $('#map').addEventListener('click', e => { const n = e.target.closest('.node'); if (n) selectE(+n.dataset.i); });
+  $('#map').addEventListener('keydown', e => { const n = e.target.closest('.node'); if (n && (e.key==='Enter'||e.key===' ')) { e.preventDefault(); selectE(+n.dataset.i); } });
+  selectE(1);
+}
+
+/* ================= TRACKER / CAREERS ================= */
+let stage = 1; const labels = ['Confirmed','Packed','Out for delivery','Delivered'];
+function drawTrack(){
+  const pct = stage / 3 * 100;
+  $('#tBar').style.width = pct + '%'; $('#tDot').style.left = pct + '%';
+  $('#tStatus').textContent = labels[stage];
+  $$('#tl li').forEach((li,i) => li.classList.toggle('done', i <= stage));
+  $('#tNext').textContent = stage === 3 ? 'Replay tracking' : 'Advance to next stage';
+}
+$('#tNext').onclick = () => { stage = stage === 3 ? 0 : stage + 1; drawTrack(); };
+$('#jobs').innerHTML = JOBS.map(([t,l,tags],i) => `
+  <div class="job"><span class="eyebrow">${l}</span><h3>${t}</h3><div class="tags">${tags.map(x => `<span>${x}</span>`).join('')}</div>
+  <button class="btn ghost" data-apply="${i}">Quick apply</button>
+  <form data-form="${i}" hidden>
+    <input id="jn${i}" required placeholder="Full name" aria-label="Full name">
+    <input id="jp${i}" required placeholder="Mobile number" inputmode="tel" aria-label="Mobile number">
+    <input id="jc${i}" type="file" accept=".pdf,.doc,.docx" aria-label="CV file">
+    <button class="btn primary">Send application</button>
+  </form></div>`).join('');
+$('#jobs').addEventListener('click', e => {
+  const b = e.target.closest('[data-apply]'); if (!b) return;
+  const f = $(`[data-form="${b.dataset.apply}"]`); f.hidden = !f.hidden;
+  if (!f.hidden && !reduce) f.animate([{transform:'perspective(600px) rotateX(-25deg)',opacity:0},{transform:'none',opacity:1}],{duration:450,easing:'cubic-bezier(.2,.8,.2,1)'});
+});
+$('#jobs').addEventListener('submit', e => { e.preventDefault(); e.target.outerHTML = '<p class="done">Application saved. On the live site this goes straight to HR.</p>'; });
+
+/* ================= FEATURE GUIDE ================= */
+$('#gTitle').textContent = FEATURES.length + ' feature ideas';
+$('#glist').innerHTML = FEATURES.map(([t,d],i) => `<li><button data-f="${i}"><i>${i+1}</i><span><b>${t}</b><span>${d}</span></span></button></li>`).join('');
+function placeBadges(){
+  FEATURES.forEach(([,,s],i) => {
+    const el = $(s); if (!el) return;
+    if ([...el.children].some(c => c.classList.contains('fb'))) return;
+    if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+    const b = document.createElement('span'); b.className = 'fb'; b.textContent = i+1; b.title = FEATURES[i][0];
+    b.onclick = ev => { ev.stopPropagation(); openPanel('guideP'); const it = $(`#glist [data-f="${i}"]`); it && it.focus(); };
+    el.appendChild(b);
+  });
+}
+$('#glist').addEventListener('click', e => {
+  const b = e.target.closest('[data-f]'); if (!b) return;
+  const el = $(FEATURES[+b.dataset.f][2]); closeAll();
+  el.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block:'center'});
+  el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+});
+$('#showBadges').addEventListener('change', e => document.body.classList.toggle('guide', e.target.checked));
+
+/* ================= SCROLL / REVEAL ================= */
+addEventListener('scroll', () => {
+  const max = document.documentElement.scrollHeight - innerHeight;
+  $('#progress').style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
+  if (hero) hero.scrollSpin = scrollY * .004;
+}, {passive:true});
+if ('IntersectionObserver' in window && !reduce) {
+  const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { en.target.classList.remove('pre'); io.unobserve(en.target); } }), {threshold:.05});
+  $$('.rv').forEach(el => { if (el.getBoundingClientRect().top > innerHeight) { el.classList.add('pre'); io.observe(el); } });
+}
+let toastT;
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2200); }
+
+/* ================= BOOT ================= */
+document.body.dataset.div = cur;
+document.body.classList.add('guide');
+const boot = () => {
+  initHero();
+  renderDivision(false);
+  renderQuote(); drawMap(); drawTrack(); placeBadges();
+  say('Hi, I am the Apple Med assistant. Ask about a product, an item code or delivery.', 'bot');
+  requestAnimationFrame(movePill);
+};
+const fontsReady = document.fonts ? Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 1200))]) : Promise.resolve();
+fontsReady.then(boot);
+if (document.fonts) document.fonts.ready.then(movePill);
+})();
+</script>
+</body>
+</html>
